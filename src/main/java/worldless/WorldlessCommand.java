@@ -56,8 +56,16 @@ public class WorldlessCommand {
 
                                             }
                                             return 1;
-                                        }))
-                                )
+                                        })))
+                                .then(literal("setdefault").then(argument("time", TimeArgumentType.time()).executes(context -> {
+                                    if (context.getSource().getServer() instanceof WorldlessStateHolder holder) {
+                                        long time = context.getArgument("time", Integer.class);
+                                        WorldlessState worldlessState = holder.worldless$getWorldlessState();
+                                        worldlessState.setTicksPerWorld(time);
+
+                                    }
+                                    return 1;
+                                })))
                 )
 
         );

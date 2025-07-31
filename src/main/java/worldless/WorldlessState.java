@@ -21,7 +21,7 @@ public class WorldlessState {
         this.enabled = value;
     }
 
-    public void setTicksPerWorld(int value) {
+    public void setTicksPerWorld(long value) {
         this.ticksPerWorld = value;
     }
 
