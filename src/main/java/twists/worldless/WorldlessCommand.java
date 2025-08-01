@@ -1,4 +1,4 @@
-package worldless;
+package twists.worldless;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.command.CommandRegistryAccess;
@@ -12,27 +12,41 @@ import static net.minecraft.server.command.CommandManager.*;
 public class WorldlessCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment) {
-        dispatcher.register(literal("worldless").then(
-                        literal("start").executes(context -> {
-                            if (context.getSource().getServer() instanceof WorldlessStateHolder holder) {
-                                WorldlessState worldlessState = holder.worldless$getWorldlessState();
-                                worldlessState.setEnabled(true);
-                                /// TODO: Show a message?
-                            }
-                            return 1;
-                        })).then(literal("stop").executes(context -> {
+        dispatcher.register(literal("twist").then(literal("worldless").then(
+                literal("start").executes(context -> {
                     if (context.getSource().getServer() instanceof WorldlessStateHolder holder) {
-                        WorldlessState worldlessState = holder.worldless$getWorldlessState();
-                        worldlessState.setEnabled(false);
-                        /// TODO: Show a message?
+                        WorldlessState worldlessState = holder.twists$worldless$getWorldlessState();
+                        worldlessState.setEnabled(true);
                     }
                     return 1;
-                })).then(
+                }))
+                .then(literal("stop").executes(context -> {
+                    if (context.getSource().getServer() instanceof WorldlessStateHolder holder) {
+                        WorldlessState worldlessState = holder.twists$worldless$getWorldlessState();
+                        worldlessState.setEnabled(false);
+                    }
+                    return 1;
+                }))
+                .then(literal("pause").executes(context -> {
+                    if (context.getSource().getServer() instanceof WorldlessStateHolder holder) {
+                        WorldlessState worldlessState = holder.twists$worldless$getWorldlessState();
+                        worldlessState.setPaused(true);
+                    }
+                    return 1;
+                }))
+                .then(literal("resume").executes(context -> {
+                    if (context.getSource().getServer() instanceof WorldlessStateHolder holder) {
+                        WorldlessState worldlessState = holder.twists$worldless$getWorldlessState();
+                        worldlessState.setPaused(false);
+                    }
+                    return 1;
+                }))
+                .then(
                         literal("time")
                                 .then(literal("add").then(argument("time", TimeArgumentType.time()).executes(context -> {
                                     if (context.getSource().getServer() instanceof WorldlessStateHolder holder) {
                                         long time = context.getArgument("time", Integer.class);
-                                        WorldlessState worldlessState = holder.worldless$getWorldlessState();
+                                        WorldlessState worldlessState = holder.twists$worldless$getWorldlessState();
                                         worldlessState.modifyTicksUntilReset(time);
 
                                     }
@@ -42,7 +56,7 @@ public class WorldlessCommand {
                                 .then(literal("remove").then(argument("time", TimeArgumentType.time()).executes(context -> {
                                     if (context.getSource().getServer() instanceof WorldlessStateHolder holder) {
                                         long time = context.getArgument("time", Integer.class);
-                                        WorldlessState worldlessState = holder.worldless$getWorldlessState();
+                                        WorldlessState worldlessState = holder.twists$worldless$getWorldlessState();
                                         worldlessState.modifyTicksUntilReset(-time);
 
                                     }
@@ -51,7 +65,7 @@ public class WorldlessCommand {
                                 .then(literal("set").then(argument("time", TimeArgumentType.time()).executes(context -> {
                                             if (context.getSource().getServer() instanceof WorldlessStateHolder holder) {
                                                 long time = context.getArgument("time", Integer.class);
-                                                WorldlessState worldlessState = holder.worldless$getWorldlessState();
+                                                WorldlessState worldlessState = holder.twists$worldless$getWorldlessState();
                                                 worldlessState.setTicksUntilReset(time);
 
                                             }
@@ -60,7 +74,7 @@ public class WorldlessCommand {
                                 .then(literal("setdefault").then(argument("time", TimeArgumentType.time()).executes(context -> {
                                     if (context.getSource().getServer() instanceof WorldlessStateHolder holder) {
                                         long time = context.getArgument("time", Integer.class);
-                                        WorldlessState worldlessState = holder.worldless$getWorldlessState();
+                                        WorldlessState worldlessState = holder.twists$worldless$getWorldlessState();
                                         worldlessState.setTicksPerWorld(time);
 
                                     }
@@ -68,7 +82,7 @@ public class WorldlessCommand {
                                 })))
                 )
 
-        );
+        ));
 
     }
 }

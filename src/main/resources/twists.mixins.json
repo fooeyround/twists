@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "twists.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "feature.worldless.AbstractFireBlockMixin",
+    "feature.worldless.MinecraftServerMixin",
+    "feature.worldless.PlayerManagerMixin",
+    "feature.worldless.PortalBlocksMixin",
+    "feature.worldless.ServerPlayerEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+	}
+}

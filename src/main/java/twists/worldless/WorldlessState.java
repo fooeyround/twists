@@ -1,10 +1,11 @@
-package worldless;
+package twists.worldless;
 
 import xyz.nucleoid.fantasy.RuntimeWorldHandle;
 
 public class WorldlessState {
 
     private boolean enabled;
+    private boolean paused;
     private long ticksPerWorld = 6000;
     private long ticksUntilReset;
 
@@ -14,9 +15,12 @@ public class WorldlessState {
 
 
     public boolean isEnabled() {
-        return this.enabled;
+        return this.enabled && !paused;
     }
 
+    public void setPaused(boolean value) {
+        this.paused = value;
+    }
     public void setEnabled(boolean value) {
         this.enabled = value;
     }

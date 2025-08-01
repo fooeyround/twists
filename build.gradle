@@ -23,7 +23,7 @@ loom {
 	}
 
 	mods {
-		"worldless" {
+		"twists" {
 			sourceSet sourceSets.main
 		}
 	}
