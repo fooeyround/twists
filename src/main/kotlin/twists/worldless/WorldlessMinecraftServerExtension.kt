@@ -14,6 +14,9 @@ import net.casual.arcade.events.GlobalEventHandler
 import net.casual.arcade.events.ListenerRegistry.Companion.register
 import net.casual.arcade.events.server.ServerTickEvent
 import net.casual.arcade.events.server.level.LevelTickEvent
+import net.casual.arcade.events.server.player.PlayerDimensionChangeEvent
+import net.casual.arcade.events.server.player.PlayerJoinEvent
+import net.casual.arcade.events.server.player.PlayerRespawnEvent
 import net.casual.arcade.extensions.Extension
 import net.casual.arcade.scheduler.GlobalTickedScheduler
 import net.casual.arcade.utils.TimeUtils.Seconds
@@ -36,6 +39,7 @@ import net.minecraft.world.level.dimension.BuiltinDimensionTypes
 import net.minecraft.world.level.dimension.LevelStem
 import net.minecraft.world.level.levelgen.WorldOptions
 import org.apache.commons.lang3.mutable.MutableLong
+import twists.Twists
 import twists.event.MinecraftServerExtensionEvent
 import twists.event.MinecraftServerExtensionEvent.Companion.getExtension
 import twists.util.WorldlessUtil.findTopNearestSafeSpawn
@@ -93,6 +97,23 @@ class WorldlessMinecraftServerExtension(
         internal fun registerEvents() {
             GlobalEventHandler.Server.register<MinecraftServerExtensionEvent> {
                 it.addExtension(::WorldlessMinecraftServerExtension)
+            }
+            GlobalEventHandler.Server.register<PlayerJoinEvent> { event ->
+                val overworld = event.player.level().server.worldlessState.overworld
+                if (overworld != null && event.player.level().server.worldlessState.enabled && event.player.level().dimension() == Level.OVERWORLD) {
+                    var giveSlowFalling = true;
+                    //TODO: Like below, change this. it can break..
+                    val initPos = BlockPos.ZERO.findTopNearestSafeSpawn(overworld, 150,100,150) ?: {
+                        giveSlowFalling = true
+                        BlockPos(0,180,0)
+                    }()
+
+                    event.player.teleportTo(overworld, initPos.x+0.5,
+                        initPos.y + 0.0, initPos.z + 0.5, Relative.ROTATION, 0.0F, 0.0F, false)
+                    if (giveSlowFalling) {
+                        event.player.addEffect(MobEffectInstance(MobEffects.SLOW_FALLING, 200, 0, false, false))
+                    }
+                }
             }
             GlobalEventHandler.Server.register<ServerTickEvent>(phase = "post") { (server) ->
 
@@ -179,15 +200,12 @@ class WorldlessMinecraftServerExtension(
                     newOverworld.chunkSource.addTicket(Ticket(TicketType.PLAYER_LOADING,31), ChunkPos.ZERO);
                     newOverworld.tick { false }
 
-
                     var giveSlowFalling = true;
                     //TODO: this really should not break... but I need a better fix than the player being randomly spawned in the air (or in a tall mountain) even with the slow fall
                     val initPos = BlockPos.ZERO.findTopNearestSafeSpawn(newOverworld, 150,100,150) ?: {
                         giveSlowFalling = true
                         BlockPos(0,180,0)
                     }()
-
-
 
                     for (player in server.playerList.players) {
                         player.teleportTo(newOverworld, initPos.x+0.5,
@@ -196,7 +214,6 @@ class WorldlessMinecraftServerExtension(
                             player.addEffect(MobEffectInstance(MobEffects.SLOW_FALLING, 200, 0, false, false))
                         }
                     }
-
 
                     val overworld = server.worldlessState.overworld
                     val nether = server.worldlessState.nether
