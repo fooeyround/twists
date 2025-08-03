@@ -15,7 +15,10 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"twists.Twists"
+			{
+				"adapter": "kotlin",
+				"value": "twists.Twists"
+			}
 		]
 	},
 	"mixins": [
@@ -23,9 +26,14 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.16.14",
-		"minecraft": "~1.21.8",
+		"minecraft": "~${minecraft_version}",
 		"java": ">=21",
-		"fabric-api": "*",
-		"fantasy": "*"
+		"fabric-language-kotlin": ">=${fabric_language_kotlin_version}",
+		"arcade-commands": ">=${arcade_version}",
+		"arcade-events-server": ">=${arcade_version}",
+		"arcade-event-registry": ">=${arcade_version}",
+		"arcade-utils": ">=${arcade_version}",
+		"arcade-dimensions": ">=${arcade_version}",
+		"arcade-scheduler": ">=${arcade_version}"
 	}
 }

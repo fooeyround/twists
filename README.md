@@ -3,8 +3,9 @@
 
 Give your games a Twist, if that is speedruns, "manhunt", or whatever you play.
 
+## Features:
 
-## Worldless
+### Worldless
 Minecraft... but the world around you resets every 5 minutes.
 
 *Portals will not work as intended in vanilla overworld.*
