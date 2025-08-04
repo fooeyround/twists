@@ -70,7 +70,7 @@ class TrackingCompassItem(properties: Properties) : Item(properties), PolymerIte
             val id = profile.id
             if (id.isPresent) {
                 val trackedPlayer = level.getPlayerByUUID(id.get())
-                if (trackedPlayer != null) {
+                if (trackedPlayer != null && trackedPlayer.level().dimension() == player.level().dimension()) {
                     item.set(DataComponents.LODESTONE_TRACKER, LodestoneTracker(Optional.of(GlobalPos.of(trackedPlayer.level().dimension(), trackedPlayer.blockPosition())), false))
                     level.playSound(null, player.blockPosition(), SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.PLAYERS, 1.0f, 1.0f)
                     return InteractionResult.CONSUME
