@@ -56,7 +56,9 @@ dependencies {
 	include(modImplementation "net.casualchampionships:arcade-dimensions:${project.arcade_version}")
 	include(modImplementation "net.casualchampionships:arcade-scheduler:${project.arcade_version}")
 
-	//TODO: remove when code usage removed. Superseded by arcade's apis
+	modImplementation include("eu.pb4:polymer-core:${project.polymer_version}")
+	//TODO: remove when code usage removed. Superseded by arcade's apis.
+	//TODO: fix weird compilation errors when symbols from fabric-api are not found. Does this have to do with fabric-language kotlin, arcade, or?
 //	include(modImplementation "xyz.nucleoid:fantasy:${project.fantasy_version}")
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 

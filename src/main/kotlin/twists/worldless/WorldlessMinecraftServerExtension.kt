@@ -119,7 +119,6 @@ class WorldlessMinecraftServerExtension(
 
                 if (!server.tickRateManager().runsNormally() || !server.worldlessState.enabled) return@register
 
-
                 val shouldReset = server.worldlessState.tick();
                 val minutes = (server.worldlessState.ticksUntilReset / 20) / 60;
                 val seconds = (server.worldlessState.ticksUntilReset / 20) % 60;
