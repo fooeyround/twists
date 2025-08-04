@@ -28,6 +28,7 @@
 		"fabricloader": ">=0.16.14",
 		"minecraft": "~${minecraft_version}",
 		"java": ">=21",
+		"fabric-api": "*",
 		"fabric-language-kotlin": ">=${fabric_language_kotlin_version}",
 		"arcade-commands": ">=${arcade_version}",
 		"arcade-events-server": ">=${arcade_version}",

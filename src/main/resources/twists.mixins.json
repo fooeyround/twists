@@ -4,6 +4,8 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "MinecraftServerMixin",
+    "feature.soulbound.InventoryMixin",
+    "feature.soulbound.ServerPlayerMixin",
     "feature.worldless.PlayerManagerMixin"
   ],
   "injectors": {
