@@ -15,6 +15,9 @@ import net.casual.arcade.minigame.managers.MinigameLevelManager
 import net.casual.arcade.minigame.phase.Phase
 import net.casual.arcade.minigame.template.teleporter.EntityTeleporter.Companion.teleport
 import net.casual.arcade.utils.IdentifierUtils
+import net.casual.arcade.utils.PlayerUtils.boostHealth
+import net.casual.arcade.utils.PlayerUtils.resetHealth
+import net.casual.arcade.utils.PlayerUtils.resetHunger
 import net.casual.arcade.utils.math.location.LocationWithLevel.Companion.asLocation
 import net.casual.arcade.utils.teleportTo
 import net.minecraft.server.MinecraftServer
@@ -49,7 +52,6 @@ class WorldlessMinigame(
 
     init {
         this.tickrate.useGlobalManager = false
-
         this.levels.addAll(this.dimensions.all())
 
     }
@@ -61,7 +63,7 @@ class WorldlessMinigame(
         val newDimensions = createNewVanillaLikeLevels(this.server)
         this.levels.addAll(newDimensions.all())
 
-//        this.dimensions.all().forEach { this.server.deleteCustomLevel(it) }
+        this.dimensions.all().forEach { this.server.deleteCustomLevel(it) }
         this.dimensions = newDimensions
 
 
@@ -98,6 +100,8 @@ class WorldlessMinigame(
                 it.teleportTo( this.levels.spawn.get(it)!!)
             }
         }
+        event.player.resetHealth()
+        event.player.resetHunger()
     }
 
     @Listener(flags = ListenerFlags.HAS_PLAYER)
