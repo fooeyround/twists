@@ -1,23 +1,5 @@
 package twists.worldless;
 
-/*
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
-
-
-import net.minecraft.server.level.Ticket;
-import net.minecraft.server.level.TicketType;
-import net.minecraft.world.entity.Relative;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
-import net.minecraft.world.level.levelgen.WorldOptions;
-import xyz.nucleoid.fantasy.Fantasy;
-import xyz.nucleoid.fantasy.RuntimeWorldConfig;
-import xyz.nucleoid.fantasy.RuntimeWorldHandle;*/
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

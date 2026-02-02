@@ -9,48 +9,38 @@ import net.casual.arcade.dimensions.level.vanilla.VanillaDimensionMapper
 import net.casual.arcade.dimensions.level.vanilla.VanillaLikeCustomLevelFactory
 import net.casual.arcade.dimensions.utils.addCustomLevel
 import net.casual.arcade.dimensions.utils.removeCustomLevel
-import net.casual.arcade.dimensions.utils.setSpoofedDimension
 import net.casual.arcade.events.GlobalEventHandler
 import net.casual.arcade.events.ListenerRegistry.Companion.register
 import net.casual.arcade.events.server.ServerTickEvent
-import net.casual.arcade.events.server.level.LevelTickEvent
-import net.casual.arcade.events.server.player.PlayerDimensionChangeEvent
 import net.casual.arcade.events.server.player.PlayerJoinEvent
-import net.casual.arcade.events.server.player.PlayerRespawnEvent
 import net.casual.arcade.extensions.Extension
-import net.casual.arcade.scheduler.GlobalTickedScheduler
-import net.casual.arcade.utils.TimeUtils.Seconds
-import net.casual.arcade.utils.TimeUtils.Ticks
+import net.casual.arcade.utils.setSpoofedDimension
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.Ticket
 import net.minecraft.server.level.TicketType
-import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.Relative
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes
 import net.minecraft.world.level.dimension.LevelStem
 import net.minecraft.world.level.levelgen.WorldOptions
 import org.apache.commons.lang3.mutable.MutableLong
-import twists.Twists
 import twists.event.MinecraftServerExtensionEvent
 import twists.event.MinecraftServerExtensionEvent.Companion.getExtension
 import twists.util.WorldlessUtil.findTopNearestSafeSpawn
-
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 import kotlin.math.max
 
 class WorldlessMinecraftServerExtension(
-    var server: MinecraftServer
+    val server: MinecraftServer
 ): Extension {
 
     var enabled  = false
@@ -102,17 +92,11 @@ class WorldlessMinecraftServerExtension(
                 val overworld = event.player.level().server.worldlessState.overworld
                 if (overworld != null && event.player.level().server.worldlessState.enabled && event.player.level().dimension() == Level.OVERWORLD) {
                     var giveSlowFalling = true;
-                    //TODO: Like below, change this. it can break..
-                    val initPos = BlockPos.ZERO.findTopNearestSafeSpawn(overworld, 150,100,150) ?: {
-                        giveSlowFalling = true
-                        BlockPos(0,180,0)
-                    }()
+                    val initPos = BlockPos.ZERO.findTopNearestSafeSpawn(overworld, 150,100,150) ?: BlockPos(0,100,0)
 
                     event.player.teleportTo(overworld, initPos.x+0.5,
                         initPos.y + 0.0, initPos.z + 0.5, Relative.ROTATION, 0.0F, 0.0F, false)
-                    if (giveSlowFalling) {
-                        event.player.addEffect(MobEffectInstance(MobEffects.SLOW_FALLING, 200, 0, false, false))
-                    }
+
                 }
             }
             GlobalEventHandler.Server.register<ServerTickEvent>(phase = "post") { (server) ->
@@ -131,15 +115,15 @@ class WorldlessMinecraftServerExtension(
 
                     val overworldKey = ResourceKey.create(
                         Registries.DIMENSION,
-                        ResourceLocation.fromNamespaceAndPath("worldless", "overworld_$newSeed")
+                        Identifier.fromNamespaceAndPath("worldless", "overworld_$newSeed")
                     )
                     val netherKey = ResourceKey.create(
                         Registries.DIMENSION,
-                        ResourceLocation.fromNamespaceAndPath("worldless", "nether_$newSeed")
+                        Identifier.fromNamespaceAndPath("worldless", "nether_$newSeed")
                     )
                     val endKey = ResourceKey.create(
                         Registries.DIMENSION,
-                        ResourceLocation.fromNamespaceAndPath("worldless", "end_$newSeed")
+                        Identifier.fromNamespaceAndPath("worldless", "end_$newSeed")
                     )
 
                     val dimensionMapper = VanillaDimensionMapper(mapOf(VanillaDimension.Overworld to overworldKey, VanillaDimension.Nether to netherKey, VanillaDimension.End to endKey))

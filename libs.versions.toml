@@ -1,0 +1,23 @@
+[versions]
+minecraft       = "1.21.11"
+fabric-loader   = "0.18.4"
+parchment       = "1.21.11:2025.12.20"
+fabric-api      = "0.141.2+1.21.11"
+fabric-kotlin   = "1.13.8+kotlin.2.3.0"
+arcade          = "0.8.1-beta.5+1.21.11"
+polymer         = "0.15.1+1.21.11"
+
+# Plugins
+fabric-loom = "1.15-SNAPSHOT"
+
+[libraries]
+minecraft       = { module = "com.mojang:minecraft"                        , version.ref = "minecraft" }
+fabric-loader   = { module = "net.fabricmc:fabric-loader"                  , version.ref = "fabric-loader" }
+fabric-api      = { module = "net.fabricmc.fabric-api:fabric-api"          , version.ref = "fabric-api" }
+fabric-kotlin   = { module = "net.fabricmc:fabric-language-kotlin"         , version.ref = "fabric-kotlin" }
+arcade          = { module = "net.casualchampionships:arcade"              , version.ref = "arcade" }
+#arcade-datagen  = { module = "net.casualchampionships:arcade-datagen"      , version.ref = "arcade" }
+polymer         = { module = "eu.pb4:polymer-core"                         , version.ref = "polymer" }
+
+[plugins]
+fabric-loom = { id = "fabric-loom", version.ref = "fabric-loom" }

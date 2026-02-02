@@ -1,11 +1,12 @@
 package twists.item
 
 import eu.pb4.polymer.core.api.item.PolymerItem
+import net.casual.arcade.utils.uuid
 import net.minecraft.ChatFormatting
 import net.minecraft.core.GlobalPos
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
@@ -18,7 +19,6 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.LodestoneTracker
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.entity.SkullBlockEntity
 import xyz.nucleoid.packettweaker.PacketContext
 import java.util.*
 
@@ -45,29 +45,15 @@ class TrackingCompassItem(properties: Properties) : Item(properties), PolymerIte
         return stack
     }
 
-    override fun getPolymerItemModel(stack: ItemStack?, context: PacketContext?): ResourceLocation? {
+    override fun getPolymerItemModel(stack: ItemStack?, context: PacketContext?): Identifier? {
         return null
     }
 
-    override fun verifyComponentsAfterLoad(stack: ItemStack) {
-        val resolvableProfile = stack.get(DataComponents.PROFILE)
-        if (resolvableProfile != null && !resolvableProfile.isResolved) {
-            resolvableProfile.resolve()
-                .thenAcceptAsync({ profile ->
-                    stack.set(
-                        DataComponents.PROFILE,
-                        profile
-                    )
-                }, SkullBlockEntity.CHECKED_MAIN_THREAD_EXECUTOR)
-        }
-    }
-
-
-    override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult? {
+    override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
         val item = player.getItemInHand(hand)
         val profile = item.components.get(DataComponents.PROFILE)
         if (profile != null) {
-            val id = profile.id
+            val id = profile.uuid()
             if (id.isPresent) {
                 val trackedPlayer = level.getPlayerByUUID(id.get())
                 if (trackedPlayer != null && trackedPlayer.level().dimension() == player.level().dimension()) {
@@ -77,6 +63,7 @@ class TrackingCompassItem(properties: Properties) : Item(properties), PolymerIte
                 }
             }
         }
+        //TODO: option to not let the player know if it failed or not.
         if (player is ServerPlayer) {
             player.sendSystemMessage(Component.literal("Tracking Failed").withStyle(ChatFormatting.RED), true)
         }
@@ -86,7 +73,7 @@ class TrackingCompassItem(properties: Properties) : Item(properties), PolymerIte
 
 
 
-    override fun getName(stack: ItemStack): Component? {
+    override fun getName(stack: ItemStack): Component {
         return Component.literal("Tracking Compass")
     }
 }

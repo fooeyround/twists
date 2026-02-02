@@ -4,11 +4,10 @@ import com.mojang.datafixers.DataFixer;
 import net.casual.arcade.events.GlobalEventHandler;
 import net.casual.arcade.extensions.ExtensionHolder;
 import net.casual.arcade.extensions.ExtensionMap;
-import net.casual.arcade.extensions.event.EntityExtensionEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.Services;
 import net.minecraft.server.WorldStem;
-import net.minecraft.server.level.progress.ChunkProgressListenerFactory;
+import net.minecraft.server.level.progress.LevelLoadListener;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +33,7 @@ public class MinecraftServerMixin implements ExtensionHolder {
             method = "<init>",
             at = @At("TAIL")
     )
-    private void twists$onMinecraftServerInit(Thread serverThread, LevelStorageSource.LevelStorageAccess storageSource, PackRepository packRepository, WorldStem worldStem, Proxy proxy, DataFixer fixerUpper, Services services, ChunkProgressListenerFactory progressListenerFactory, CallbackInfo ci) {
+    private void twists$onMinecraftServerInit(Thread serverThread, LevelStorageSource.LevelStorageAccess storageSource, PackRepository packRepository, WorldStem worldStem, Proxy proxy, DataFixer fixerUpper, Services services, LevelLoadListener levelLoadListener, CallbackInfo ci) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         GlobalEventHandler.Server.broadcast(new MinecraftServerExtensionEvent(server));
     }

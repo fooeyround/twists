@@ -6,8 +6,7 @@
     "MinecraftServerMixin",
     "feature.soulbound.EntityEquipmentMixin",
     "feature.soulbound.InventoryMixin",
-    "feature.soulbound.ServerPlayerMixin",
-    "feature.worldless.PlayerManagerMixin"
+    "feature.soulbound.ServerPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -7,7 +7,7 @@ import net.casual.arcade.commands.literal
 import net.casual.arcade.commands.requiresPermission
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.arguments.TimeArgument
-import twists.Twists
+import net.minecraft.server.permissions.PermissionLevel
 
 import twists.worldless.WorldlessMinecraftServerExtension.Companion.worldlessState
 
@@ -16,7 +16,7 @@ object WorldlessCommand {
 
     fun createWorldlessCommand(): LiteralArgumentBuilder<CommandSourceStack> {
         return CommandTree.buildLiteral("worldless") {
-            requiresPermission(2)
+            requiresPermission(PermissionLevel.MODERATORS)
             literal("start") {
                 executes { it -> it.source.server.worldlessState.enabled = true; 1 }
             }

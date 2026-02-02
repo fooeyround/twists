@@ -1,18 +1,18 @@
 package twists.sharedInventory
 
-import net.casual.arcade.extensions.DataExtension
-import net.minecraft.resources.ResourceLocation
+import net.casual.arcade.extensions.SerializableExtension
+import net.minecraft.resources.Identifier
 import net.minecraft.world.ItemStackWithSlot
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 
-class SharedInventoryTeamExtension: DataExtension {
+class SharedInventoryTeamExtension: SerializableExtension {
     var sharedInventory: Boolean = false
     val inventory: Inventory? = null
 
-    override fun getId(): ResourceLocation {
-        return ResourceLocation.fromNamespaceAndPath("twists", "teamSharedInventorySettings")
+    override fun id(): Identifier {
+        return Identifier.fromNamespaceAndPath("twists", "teamSharedInventorySettings")
     }
 
     override fun serialize(output: ValueOutput) {
