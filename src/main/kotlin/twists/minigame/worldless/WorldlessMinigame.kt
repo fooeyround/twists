@@ -25,6 +25,7 @@ import net.minecraft.world.entity.Relative
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.phys.Vec3
+import twists.extension.PlayerFallWithoutDamageExtension.Companion.takeNoDamageOnNextFall
 import twists.minigame.TwistSettings
 import twists.minigame.TwistedMinigame
 import twists.util.twists
@@ -73,7 +74,8 @@ class WorldlessMinigame(
         )
 
         players.forEach {
-            it.teleportTo(this.overworld, 0.0, y.toDouble(), 0.0, Relative.ALL, 0F, 0F, false)
+            it.teleportTo(this.overworld, 0.0, y.toDouble() + 10.0, 0.0, Relative.ALL, 0F, 0F, false)
+            it.takeNoDamageOnNextFall()
         }
     }
 
