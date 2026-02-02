@@ -50,7 +50,7 @@ class PlayerFallWithoutDamageExtension(
                 }
             }
             GlobalEventHandler.Server.register<PlayerFallEvent> { event ->
-                if (event.onGround) event.player.playerFallWithoutDamageExtension.takeNoDamageNextFall = false
+//                if (event.onGround) event.player.playerFallWithoutDamageExtension.takeNoDamageNextFall = false
             }
         }
     }
