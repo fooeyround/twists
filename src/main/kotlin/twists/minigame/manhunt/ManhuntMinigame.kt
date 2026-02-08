@@ -11,16 +11,24 @@ import net.casual.arcade.minigame.annotation.Listener
 import net.casual.arcade.minigame.annotation.ListenerFlags
 import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
 import net.casual.arcade.minigame.events.MinigameCloseEvent
+import net.casual.arcade.minigame.events.MinigameSetPlayingEvent
 import net.casual.arcade.minigame.managers.MinigameLevelManager
 import net.casual.arcade.minigame.phase.Phase
+import net.casual.arcade.minigame.serialization.MinigameFactory
 import net.casual.arcade.utils.IdentifierUtils
+import net.casual.arcade.utils.PlayerUtils.clearPlayerInventory
+import net.casual.arcade.utils.PlayerUtils.grantAdvancement
+import net.casual.arcade.utils.PlayerUtils.grantAllRecipesSilently
+import net.casual.arcade.utils.PlayerUtils.resetExperience
 import net.casual.arcade.utils.PlayerUtils.resetHealth
 import net.casual.arcade.utils.PlayerUtils.resetHunger
+import net.casual.arcade.utils.PlayerUtils.revokeAllAdvancements
 import net.casual.arcade.utils.math.location.LocationWithLevel.Companion.asLocation
 import net.casual.arcade.utils.set
 import net.casual.arcade.utils.teleportTo
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.level.GameType
 import net.minecraft.world.level.gamerules.GameRules
 import twists.extension.PlayerFallWithoutDamageExtension.Companion.takeNoDamageOnNextFall
 import twists.minigame.TwistedMinigame
@@ -36,6 +44,7 @@ class ManhuntMinigame(
 ): TwistedMinigame(server, uuid) {
     override val id = ID
     override val settings = ManhuntSettings(this)
+
     override fun phases(): Collection<Phase<out Minigame>> {
         return ManhuntPhase.entries
     }
@@ -50,6 +59,7 @@ class ManhuntMinigame(
         this.players.keepPlayerData = false
         
         this.levels.spawn = ManhuntSpawnLocation(this.overworld, this.dimensions)
+        this.settings.canPvp.set(false)
     }
 
     @Listener
@@ -69,6 +79,22 @@ class ManhuntMinigame(
         event.player.resetHunger()
     }
 
+    @Listener
+    private fun onSetPlaying(event: MinigameSetPlayingEvent) {
+        val player = event.player
+        player.isInvisible = false
+        player.closeContainer()
+
+        player.resetHunger()
+        player.resetExperience()
+        player.clearPlayerInventory()
+        player.removeAllEffects()
+
+        player.removeVehicle()
+        player.setGlowingTag(false)
+
+        player.setGameMode(GameType.SURVIVAL)
+    }
 
 
 
@@ -86,6 +112,9 @@ class ManhuntMinigame(
                             seed(seed)
                         } else {
                             randomSeed()
+                        }
+                        gameRules {
+                            set(GameRules.LOCATOR_BAR, false)
                         }
                         persistence(LevelPersistence.Temporary)
                     }

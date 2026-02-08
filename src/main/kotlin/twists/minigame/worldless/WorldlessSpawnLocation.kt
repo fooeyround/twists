@@ -1,7 +1,6 @@
 package twists.minigame.worldless
 
 import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevels
-import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevelsBuilder
 import net.casual.arcade.minigame.managers.MinigameLevelManager
 import net.casual.arcade.utils.PlayerUtils.server
 import net.casual.arcade.utils.math.location.LocationWithLevel

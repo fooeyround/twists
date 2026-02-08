@@ -8,7 +8,7 @@ import net.casual.arcade.utils.ItemUtils.named
 import net.casual.arcade.utils.TimeUtils.Minutes
 import net.minecraft.world.item.Items
 
-class ManhuntSettings(
+class   ManhuntSettings(
     minigame: ManhuntMinigame,
     defaults: DisplayableSettingsDefaults = DisplayableSettingsDefaults()
 ): TwistSettings(minigame, defaults) {

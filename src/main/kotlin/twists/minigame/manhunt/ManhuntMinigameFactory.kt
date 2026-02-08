@@ -28,6 +28,7 @@ class ManhuntMinigameFactory : MinigameFactory {
             get() = ManhuntMinigame.ID
         override val CODEC: MapCodec<out ManhuntMinigameFactory>
             get() = MapCodec.unit(ManhuntMinigameFactory())
+        val DEFAULT = ManhuntMinigameFactory()
     }
 
 

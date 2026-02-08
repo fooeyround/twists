@@ -1,5 +1,6 @@
 package twists.minigame.lobby
 
+import kotlinx.coroutines.withContext
 import net.casual.arcade.dimensions.level.CustomLevel
 import net.casual.arcade.dimensions.level.LevelPersistence
 import net.casual.arcade.dimensions.level.builder.CustomLevelBuilder
@@ -16,25 +17,33 @@ import net.casual.arcade.minigame.events.MinigameInitializeEvent
 import net.casual.arcade.minigame.managers.MinigameLevelManager
 import net.casual.arcade.minigame.phase.Phase
 import net.casual.arcade.minigame.serialization.MinigameCreationContext
+import net.casual.arcade.minigame.utils.MinigameUtils.transferAdminAndSpectatorTeamsTo
+import net.casual.arcade.scheduler.utils.asCoroutineDispatcher
 import net.casual.arcade.utils.*
+import net.casual.arcade.utils.TimeUtils.Seconds
+import net.casual.arcade.utils.coroutine.delay
+import net.casual.arcade.utils.coroutine.launch
 import net.casual.arcade.utils.file.ReadableArchive
 import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
-import net.minecraft.world.level.GameType
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes
 import net.minecraft.world.level.gamerules.GameRules
+import twists.command.LobbyCommand
 import twists.util.TwistsUtils
 import twists.util.twists
 import java.util.*
+import kotlin.reflect.KProperty0
 
 
 class LobbyMinigame(
     server: MinecraftServer,
     uuid: UUID,
+    next: KProperty0<Minigame?>,
     val modules: MinigameDataModules
 ) : Minigame(server, uuid) {
     override val id: Identifier = twists("lobby")
@@ -45,6 +54,8 @@ class LobbyMinigame(
     override fun phases(): Collection<Phase<out Minigame>> {
         return LobbyPhase.entries
     }
+
+    val next by next
 
     init {
         this.players.keepPlayerData = false
@@ -84,7 +95,6 @@ class LobbyMinigame(
         world.extract(this.server, destination)
     }
 
-
     @Listener
     private fun onMinigameInit(event: MinigameInitializeEvent) {
         this.levels.add(this.lobbyLevel)
@@ -104,23 +114,56 @@ class LobbyMinigame(
         this.settings.canInteractAll = false
         this.settings.daylightCycle = 0
 
+        if (this.modules.get<MinigameWorldData>() == null) {
+            BoxedArea(Vec3i(0, -1, 0), 10, 3, this.lobbyLevel).place()
+        }
 
-        BoxedArea(Vec3i(0, -1, 0), 10, 3, this.lobbyLevel).place()
+        this.property("next_minigame") { this.next?.id?.toString() }
 
+        this.commands.register(LobbyCommand(this))
 
     }
 
 
     @Listener
     private fun onMinigameAddNewPlayer(event: MinigameAddNewPlayerEvent) {
-        event.player.teleportTo(this.levels.spawn.get(event.player)!!)
-        event.player.setGameMode(GameType.ADVENTURE)
+        this.teleport(event.player)
+//        event.player.setGameMode(GameType.ADVENTURE)
     }
 
     @Listener
     private fun onPlayerVoidDamage(event: PlayerVoidDamageEvent) {
-        event.player.teleportTo(this.levels.spawn.get(event.player)!!)
+        this.teleport(event.player)
         event.cancel()
+    }
+
+    fun teleport(player: ServerPlayer) {
+        player.teleportTo(this.levels.spawn.get(player)!!)
+    }
+
+    fun startCountdown() {
+        this.server.launch {
+            withContext(scheduler.asPhasedScheduler().asCoroutineDispatcher()) {
+                visuals.countdown.transition(players = players::all)
+                delay(1.Seconds)
+                moveToNextMinigame()
+            }
+        }
+    }
+
+
+    fun moveToNextMinigame() {
+        val next = this.next
+        if (next == null || next.closed) {
+            TwistsUtils.logger.error("Failed to move to next minigame, it was not specified or closed!")
+            return
+        }
+
+        this.transferAdminAndSpectatorTeamsTo(next)
+        this.players.transferTo(next, players)
+        next.start()
+
+        this.setPhase(LobbyPhase.Waiting)
     }
 
 
@@ -129,6 +172,7 @@ class LobbyMinigame(
 
         fun create(
             lobby: String,
+            next: KProperty0<Minigame?>,
             context: MinigameCreationContext
         ): LobbyMinigame {
             val server = context.server
@@ -139,7 +183,7 @@ class LobbyMinigame(
                 TwistsUtils.logger.error("Failed to read lobby $lobby", exception)
                 MinigameDataModules.empty()
             }
-            return LobbyMinigame(server, context.uuid, modules)
+            return LobbyMinigame(server, context.uuid, next, modules)
         }
 
     }

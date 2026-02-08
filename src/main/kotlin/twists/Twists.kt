@@ -14,14 +14,19 @@ import net.casual.arcade.minigame.utils.MinigameUtils.getMinigame
 import net.casual.arcade.scheduler.task.utils.TaskRegistries
 import net.casual.arcade.utils.PlayerUtils.players
 import net.casual.arcade.utils.serialization.codec.CodecProvider.Companion.register
+import net.fabricmc.api.DedicatedServerModInitializer
 import net.fabricmc.api.ModInitializer
+import net.minecraft.commands.Commands
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.server.MinecraftServer
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.enchantment.Enchantment
+import twists.command.TwistsCommand
 import twists.extension.PlayerFallWithoutDamageExtension
 import twists.item.TrackingCompassItem
+import twists.minigame.TwistsMinigameManager
 import twists.minigame.lobby.LobbyData
 import twists.minigame.lobby.LobbyMinigame
 import twists.minigame.manhunt.ManhuntMinigameFactory
@@ -33,9 +38,9 @@ import twists.util.TwistsUtils
 import twists.util.twists
 import twists.worldless.WorldlessMinecraftServerExtension
 
-object Twists: ModInitializer {
+object Twists: DedicatedServerModInitializer {
 
-    lateinit var lobby: LobbyMinigame
+    val minigames = TwistsMinigameManager(TwistsUtils.resolve("event"))
 
     @JvmField
     val SOULBOUND_ENCHANTMENT: ResourceKey<Enchantment> = ResourceKey.create(
@@ -44,18 +49,14 @@ object Twists: ModInitializer {
     )
     val TRACKING_COMPASS =  ItemUtil.registerItem("tracking_compass", ::TrackingCompassItem)
 
-    override fun onInitialize() {
+    fun reload(server: MinecraftServer) {
+        this.minigames.reload(server)
+    }
+
+    override fun onInitializeServer() {
 
         LobbyData.register(MinigameRegistries.MINIGAME_DATA_MODULE_PROVIDER)
 
-
-        //TODO: generify "twists" separate from minigame (worldless, manhunt, ...)
-//        GlobalEventHandler.Server.register<ServerRegisterCommandEvent> { event ->
-//            event.dispatcher.register(Commands.literal("twist")
-//                .requiresPermission(PermissionLevel.MODERATORS)
-//                .then(WorldlessCommand.createWorldlessCommand())
-//            )
-//        }
         WorldlessMinecraftServerExtension.registerEvents()
         PlayerFallWithoutDamageExtension.registerEvents()
 
@@ -63,26 +64,15 @@ object Twists: ModInitializer {
         ManhuntMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
         Registry.register(TaskRegistries.TASK_FACTORY, WorldlessBossbarTask.id, WorldlessBossbarTask)
 
-        GlobalEventHandler.Server.register<ServerStartEvent> {
-            this.lobby = LobbyMinigame.create("default", MinigameCreationContext(it.server))
-            this.lobby.start()
-        }
-        GlobalEventHandler.Server.register<PlayerJoinEvent> {
-            if (it.player.getMinigame() == null) {
-                this.lobby.players.add(it.player)
-            }
-        }
-        GlobalEventHandler.Server.register<MinigameCloseEvent> {
-            if (it.minigame.uuid == this.lobby.uuid) {
-                this.lobby = LobbyMinigame.create("default", MinigameCreationContext(it.minigame.server))
-            }
-            it.minigame.server.players.forEach { player ->
-                this.lobby.players.add(player)
-            }
+
+        this.minigames.registerEvents(GlobalEventHandler.Server)
+
+        GlobalEventHandler.Server.register<ServerStartEvent>(priority = 10_000) {
+            this.minigames.load(it.server)
         }
 
         GlobalEventHandler.Server.register<ServerRegisterCommandEvent> { event ->
-            event.register(TeamCommandModifier)
+            event.register(TeamCommandModifier, TwistsCommand)
         }
 
         TwistsUtils.logger.info("${TwistsUtils.MOD_ID} loaded!")

@@ -14,7 +14,7 @@
 	"icon": "assets/twists/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
+		"server": [
 			{
 				"adapter": "kotlin",
 				"value": "twists.Twists"

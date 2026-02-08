@@ -10,7 +10,7 @@ plugins {
     java
 }
 
-version = "0.3.0"
+version = project.version
 
 repositories {
 

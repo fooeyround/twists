@@ -11,19 +11,19 @@ import net.casual.arcade.minigame.annotation.Listener
 import net.casual.arcade.minigame.annotation.ListenerFlags
 import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
 import net.casual.arcade.minigame.events.MinigameCloseEvent
+import net.casual.arcade.minigame.events.MinigameSetPlayingEvent
 import net.casual.arcade.minigame.phase.Phase
 import net.casual.arcade.utils.IdentifierUtils
+import net.casual.arcade.utils.PlayerUtils.clearPlayerInventory
+import net.casual.arcade.utils.PlayerUtils.resetExperience
 import net.casual.arcade.utils.PlayerUtils.resetHealth
 import net.casual.arcade.utils.PlayerUtils.resetHunger
 import net.casual.arcade.utils.set
 import net.casual.arcade.utils.teleportTo
-import net.minecraft.core.component.DataComponents
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.component.ResolvableProfile
+import net.minecraft.world.level.GameType
 import net.minecraft.world.level.gamerules.GameRules
-import twists.Twists
 import twists.extension.PlayerFallWithoutDamageExtension.Companion.takeNoDamageOnNextFall
 import twists.minigame.TwistedMinigame
 import twists.util.TwistsUtils
@@ -107,6 +107,23 @@ class WorldlessMinigame(
 //        }
     }
 
+
+    @Listener
+    private fun onSetPlaying(event: MinigameSetPlayingEvent) {
+        val player = event.player
+        player.isInvisible = false
+        player.closeContainer()
+
+        player.resetHunger()
+        player.resetExperience()
+        player.clearPlayerInventory()
+        player.removeAllEffects()
+
+        player.removeVehicle()
+        player.setGlowingTag(false)
+
+        player.setGameMode(GameType.SURVIVAL)
+    }
 
 
 
