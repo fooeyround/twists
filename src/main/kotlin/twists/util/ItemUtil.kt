@@ -12,10 +12,11 @@ import net.minecraft.world.item.ItemStack
 object ItemUtil {
 
     fun registerItem(name: String, item: (Item.Properties) -> Item): Item {
-        val itemKey = ResourceKey.create(Registries.ITEM, Identifier("twists", name))
+        val itemKey = ResourceKey.create(Registries.ITEM, twists(name))
         val item = item(Item.Properties().setId(itemKey))
         return Registry.register(BuiltInRegistries.ITEM, itemKey, item)
     }
+
 
     fun dropAllExceptSoulboundInInventory(inventory: Inventory) {
             for (i in inventory.nonEquipmentItems.indices) {

@@ -1,7 +1,6 @@
-package twists.minigame.worldless
+package twists.minigame.manhunt
 
 import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevels
-import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevelsBuilder
 import net.casual.arcade.minigame.managers.MinigameLevelManager
 import net.casual.arcade.utils.PlayerUtils.server
 import net.casual.arcade.utils.math.location.LocationWithLevel
@@ -13,7 +12,7 @@ import net.minecraft.world.level.storage.LevelData.RespawnData
 import net.minecraft.world.phys.Vec3
 
 
-class WorldlessSpawnLocation(val level: ServerLevel, val allowedLevels: VanillaLikeLevels? = null): MinigameLevelManager.SpawnLocation {
+class ManhuntSpawnLocation(val level: ServerLevel, val allowedLevels: VanillaLikeLevels? = null): MinigameLevelManager.SpawnLocation {
     override val overridesPlayerSpawnPoint: Boolean = true
     override fun get(player: ServerPlayer): LocationWithLevel<ServerLevel> {
         val respawnData: RespawnData? = player.respawnConfig?.respawnData()

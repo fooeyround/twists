@@ -1,4 +1,4 @@
-package twists.minigame.worldless
+package twists.minigame.manhunt
 
 import net.casual.arcade.dimensions.level.LevelPersistence
 import net.casual.arcade.dimensions.level.vanilla.VanillaDimension
@@ -11,35 +11,33 @@ import net.casual.arcade.minigame.annotation.Listener
 import net.casual.arcade.minigame.annotation.ListenerFlags
 import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
 import net.casual.arcade.minigame.events.MinigameCloseEvent
+import net.casual.arcade.minigame.managers.MinigameLevelManager
 import net.casual.arcade.minigame.phase.Phase
 import net.casual.arcade.utils.IdentifierUtils
 import net.casual.arcade.utils.PlayerUtils.resetHealth
 import net.casual.arcade.utils.PlayerUtils.resetHunger
+import net.casual.arcade.utils.math.location.LocationWithLevel.Companion.asLocation
 import net.casual.arcade.utils.set
 import net.casual.arcade.utils.teleportTo
-import net.minecraft.core.component.DataComponents
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.component.ResolvableProfile
 import net.minecraft.world.level.gamerules.GameRules
-import twists.Twists
 import twists.extension.PlayerFallWithoutDamageExtension.Companion.takeNoDamageOnNextFall
 import twists.minigame.TwistedMinigame
 import twists.util.TwistsUtils
 import twists.util.twists
 import java.util.*
 
-class WorldlessMinigame(
+class ManhuntMinigame(
     server: MinecraftServer,
     uuid: UUID,
     private var dimensions: VanillaLikeLevels,
-    private val factory: WorldlessMinigameFactory? = null
+    private val factory: ManhuntMinigameFactory? = null
 ): TwistedMinigame(server, uuid) {
     override val id = ID
-    override val settings = WorldlessSettings(this)
+    override val settings = ManhuntSettings(this)
     override fun phases(): Collection<Phase<out Minigame>> {
-        return WorldlessPhase.entries
+        return ManhuntPhase.entries
     }
 
     val overworld: ServerLevel
@@ -50,31 +48,9 @@ class WorldlessMinigame(
         this.tickrate.useGlobalManager = false
         this.levels.addAll(this.dimensions.all())
         this.players.keepPlayerData = false
-
-        this.levels.spawn = WorldlessSpawnLocation(this.overworld, this.dimensions)
-
-
+        
+        this.levels.spawn = ManhuntSpawnLocation(this.overworld, this.dimensions)
     }
-
-
-
-
-    internal fun switchToNewWorld() {
-        val newDimensions = createNewVanillaLikeLevels(this.server)
-        this.levels.addAll(newDimensions.all())
-
-        this.dimensions.all().forEach { this.server.deleteCustomLevel(it) }
-        this.dimensions = newDimensions
-
-        this.overworld.getChunk(0, 0)
-        this.levels.spawn = WorldlessSpawnLocation(this.overworld, this.dimensions)
-
-        players.forEach {
-            it.teleportTo(this.levels.spawn.get(it)!!)
-            it.takeNoDamageOnNextFall() //TODO: hopefully unneeded now.
-        }
-    }
-
 
     @Listener
     private fun onMinigameClose(event: MinigameCloseEvent) {
@@ -86,32 +62,20 @@ class WorldlessMinigame(
 
     @Listener
     private fun onMinigamePlayerJoin(event: MinigameAddNewPlayerEvent) {
-        if (event.minigame is WorldlessMinigame && event.minigame.phase > WorldlessPhase.Initialization) {
+        if (event.minigame is ManhuntMinigame && event.minigame.phase > ManhuntPhase.Initialization) {
                 event.player.teleportTo( this.levels.spawn.get(event.player)!!)
         }
         event.player.resetHealth()
         event.player.resetHunger()
-
     }
 
-    @Listener(flags = ListenerFlags.HAS_PLAYER)
-    private fun onPlayerRespawn(event: PlayerRespawnEvent) {
-        val player = event.player
-//
-//        player.lastDeathLocation.ifPresent { pos ->
-//            val level = player.server.getLevel(pos.dimension)
-//            if (level != null && this.levels.has(level)) {
-//                val location = pos.pos.center.withRotation(player.rotationVector).with(level)
-//                player.teleportTo(location)
-//            }
-//        }
-    }
+
 
 
 
 
     companion object {
-        val ID = twists("worldless")
+        val ID = twists("manhunt")
 
         fun createNewVanillaLikeLevels(server: MinecraftServer, seed: Long? = null): VanillaLikeLevels {
             return VanillaLikeLevelsBuilder.build(server) {
@@ -123,10 +87,6 @@ class WorldlessMinigame(
                         } else {
                             randomSeed()
                         }
-                        gameRules {
-                            set(GameRules.IMMEDIATE_RESPAWN, true)
-                        }
-                        //TODO: should there be an option to kept them?
                         persistence(LevelPersistence.Temporary)
                     }
                 }

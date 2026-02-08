@@ -1,7 +1,9 @@
 package twists
 
+import net.casual.arcade.commands.register
 import net.casual.arcade.events.GlobalEventHandler
 import net.casual.arcade.events.ListenerRegistry.Companion.register
+import net.casual.arcade.events.server.ServerRegisterCommandEvent
 import net.casual.arcade.events.server.ServerStartEvent
 import net.casual.arcade.events.server.player.PlayerJoinEvent
 import net.casual.arcade.minigame.data.MinigameDataModule.Provider.Companion.register
@@ -16,11 +18,14 @@ import net.fabricmc.api.ModInitializer
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.enchantment.Enchantment
 import twists.extension.PlayerFallWithoutDamageExtension
 import twists.item.TrackingCompassItem
 import twists.minigame.lobby.LobbyData
 import twists.minigame.lobby.LobbyMinigame
+import twists.minigame.manhunt.ManhuntMinigameFactory
+import twists.minigame.manhunt.TeamCommandModifier
 import twists.minigame.worldless.WorldlessMinigameFactory
 import twists.task.WorldlessBossbarTask
 import twists.util.ItemUtil
@@ -37,12 +42,11 @@ object Twists: ModInitializer {
         Registries.ENCHANTMENT,
         twists("soulbound")
     )
+    val TRACKING_COMPASS =  ItemUtil.registerItem("tracking_compass", ::TrackingCompassItem)
 
     override fun onInitialize() {
 
         LobbyData.register(MinigameRegistries.MINIGAME_DATA_MODULE_PROVIDER)
-
-        ItemUtil.registerItem("tracking_compass", ::TrackingCompassItem)
 
 
         //TODO: generify "twists" separate from minigame (worldless, manhunt, ...)
@@ -56,6 +60,7 @@ object Twists: ModInitializer {
         PlayerFallWithoutDamageExtension.registerEvents()
 
         WorldlessMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
+        ManhuntMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
         Registry.register(TaskRegistries.TASK_FACTORY, WorldlessBossbarTask.id, WorldlessBossbarTask)
 
         GlobalEventHandler.Server.register<ServerStartEvent> {
@@ -74,6 +79,10 @@ object Twists: ModInitializer {
             it.minigame.server.players.forEach { player ->
                 this.lobby.players.add(player)
             }
+        }
+
+        GlobalEventHandler.Server.register<ServerRegisterCommandEvent> { event ->
+            event.register(TeamCommandModifier)
         }
 
         TwistsUtils.logger.info("${TwistsUtils.MOD_ID} loaded!")
