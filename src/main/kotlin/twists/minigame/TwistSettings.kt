@@ -11,6 +11,4 @@ open class TwistSettings(
     defaults: DisplayableSettingsDefaults = DisplayableSettingsDefaults()
 ): MinigameSettings(minigame, defaults) {
 
-
-
 }

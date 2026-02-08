@@ -10,27 +10,20 @@ import net.casual.arcade.minigame.Minigame
 import net.casual.arcade.minigame.annotation.Listener
 import net.casual.arcade.minigame.annotation.ListenerFlags
 import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
-import net.casual.arcade.minigame.events.MinigameInitializeEvent
-import net.casual.arcade.minigame.managers.MinigameLevelManager
+import net.casual.arcade.minigame.events.MinigameCloseEvent
 import net.casual.arcade.minigame.phase.Phase
-import net.casual.arcade.minigame.template.teleporter.EntityTeleporter.Companion.teleport
 import net.casual.arcade.utils.IdentifierUtils
-import net.casual.arcade.utils.PlayerUtils.boostHealth
 import net.casual.arcade.utils.PlayerUtils.resetHealth
 import net.casual.arcade.utils.PlayerUtils.resetHunger
-import net.casual.arcade.utils.math.location.LocationWithLevel.Companion.asLocation
+import net.casual.arcade.utils.set
 import net.casual.arcade.utils.teleportTo
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.server.level.Ticket
-import net.minecraft.server.level.TicketType
-import net.minecraft.world.entity.Relative
-import net.minecraft.world.level.ChunkPos
-import net.minecraft.world.level.levelgen.Heightmap
-import net.minecraft.world.phys.Vec3
+import net.minecraft.world.level.GameType
+import net.minecraft.world.level.gamerules.GameRules
 import twists.extension.PlayerFallWithoutDamageExtension.Companion.takeNoDamageOnNextFall
-import twists.minigame.TwistSettings
 import twists.minigame.TwistedMinigame
+import twists.util.TwistsUtils
 import twists.util.twists
 import java.util.*
 
@@ -53,6 +46,7 @@ class WorldlessMinigame(
     init {
         this.tickrate.useGlobalManager = false
         this.levels.addAll(this.dimensions.all())
+        this.players.keepPlayerData = false
 
     }
 
@@ -66,42 +60,31 @@ class WorldlessMinigame(
         this.dimensions.all().forEach { this.server.deleteCustomLevel(it) }
         this.dimensions = newDimensions
 
-
-        this.overworld.chunkSource.addTicket(Ticket(TicketType.SPAWN_SEARCH, 1), ChunkPos(0,0))
-        this.overworld.tick { true }
-        val y =  this.overworld.getHeight(Heightmap.Types.WORLD_SURFACE, 0, 0)
-        this.levels.spawn = MinigameLevelManager.SpawnLocation.global(
-            location = this.overworld.asLocation(Vec3(0.0, y.toDouble(), 0.0)),
-            overridesPlayerSpawnPoint = true
-        )
+        this.levels.spawn = WorldlessSpawnLocation(this.overworld)
 
         players.forEach {
-            it.teleportTo(this.overworld, 0.0, y.toDouble() + 10.0, 0.0, Relative.ALL, 0F, 0F, false)
-            it.takeNoDamageOnNextFall()
+            it.teleportTo(this.levels.spawn.get(it)!!)
+            //it.takeNoDamageOnNextFall() //TODO: hopefully unneeded now.
         }
     }
 
 
     @Listener
-    private fun onInitialize(event: MinigameInitializeEvent) {
-        this.overworld.chunkSource.addTicket(Ticket(TicketType.SPAWN_SEARCH, 1), ChunkPos(0,0))
-        this.overworld.tick { true }
-        val y =  this.overworld.getHeight(Heightmap.Types.WORLD_SURFACE, 0, 0)
-        this.levels.spawn = MinigameLevelManager.SpawnLocation.global(
-            location = this.overworld.asLocation(Vec3(0.0, y.toDouble(), 0.0)),
-            overridesPlayerSpawnPoint = true
-        )
+    private fun onMinigameClose(event: MinigameCloseEvent) {
+        for (level in this.dimensions.all()) {
+                this.server.deleteCustomLevel(level)
+        }
     }
+
 
     @Listener
     private fun onMinigamePlayerJoin(event: MinigameAddNewPlayerEvent) {
-        if (event.minigame is WorldlessMinigame && event.minigame.phase > WorldlessPhase.ResettingWorld) {
-            this.players.forEach {
-                it.teleportTo( this.levels.spawn.get(it)!!)
-            }
+        if (event.minigame is WorldlessMinigame && event.minigame.phase > WorldlessPhase.Initialization) {
+                event.player.teleportTo( this.levels.spawn.get(event.player)!!)
         }
         event.player.resetHealth()
         event.player.resetHunger()
+        event.player.setGameMode(GameType.SURVIVAL)
     }
 
     @Listener(flags = ListenerFlags.HAS_PLAYER)
@@ -127,11 +110,14 @@ class WorldlessMinigame(
             return VanillaLikeLevelsBuilder.build(server) {
                 for (dimension in listOf(VanillaDimension.Overworld, VanillaDimension.Nether, VanillaDimension.End)) {
                     this.set(dimension) {
-                        dimensionKey(IdentifierUtils.random { "${dimension.getDimensionKey().identifier().path}_$it" })
+                        dimensionKey(IdentifierUtils.random(TwistsUtils.MOD_ID) { "${dimension.getDimensionKey().identifier().path}_$it" })
                         if (seed != null) {
                             seed(seed)
                         } else {
                             randomSeed()
+                        }
+                        gameRules {
+                            set(GameRules.IMMEDIATE_RESPAWN, true)
                         }
                         //TODO: should there be an option to kept them?
                         persistence(LevelPersistence.Temporary)

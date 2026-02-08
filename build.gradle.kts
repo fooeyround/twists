@@ -56,7 +56,7 @@ loom {
     runConfigs.configureEach {
         //TODO: how to do in kotlin
 //        ideConfigGenerated = true
-//        vmArgs '-Dmixin.debug.export=true'
+//        vmArgs '-Dmixin.debug.export=true -DCOMMAND_STACK_TRACES=true'
     }
 }
 

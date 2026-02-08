@@ -91,7 +91,6 @@ class WorldlessMinecraftServerExtension(
             GlobalEventHandler.Server.register<PlayerJoinEvent> { event ->
                 val overworld = event.player.level().server.worldlessState.overworld
                 if (overworld != null && event.player.level().server.worldlessState.enabled && event.player.level().dimension() == Level.OVERWORLD) {
-                    var giveSlowFalling = true;
                     val initPos = BlockPos.ZERO.findTopNearestSafeSpawn(overworld, 150,100,150) ?: BlockPos(0,100,0)
 
                     event.player.teleportTo(overworld, initPos.x+0.5,

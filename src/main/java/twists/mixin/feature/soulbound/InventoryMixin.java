@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import twists.Twists;
+import twists.util.TwistsUtils;
 
 
 @Mixin(Inventory.class)
@@ -23,7 +24,7 @@ public class InventoryMixin {
         try {
             return original || stack.getEnchantments().getLevel(this.player.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Twists.SOULBOUND_ENCHANTMENT)) > 0;
         } catch (Exception e) {
-            Twists.getLOGGER().error("Soulbound enchantment not found: {}", String.valueOf(e));
+            TwistsUtils.getLogger().error("Soulbound enchantment not found: {}", String.valueOf(e));
             return original;
         }
     }

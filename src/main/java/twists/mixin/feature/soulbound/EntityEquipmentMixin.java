@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import twists.Twists;
+import twists.util.TwistsUtils;
 
 @Mixin(EntityEquipment.class)
 public class EntityEquipmentMixin {
@@ -20,7 +21,7 @@ public class EntityEquipmentMixin {
             try {
                 return stack.getEnchantments().getLevel(entity.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Twists.SOULBOUND_ENCHANTMENT)) <= 0;
             } catch (Exception e) {
-                Twists.getLOGGER().error("Soulbound enchantment not found: {}", String.valueOf(e));
+                TwistsUtils.getLogger().error("Soulbound enchantment not found: {}", String.valueOf(e));
             }
         }
         return true;
