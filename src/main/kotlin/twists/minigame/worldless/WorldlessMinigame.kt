@@ -11,6 +11,7 @@ import net.casual.arcade.minigame.annotation.Listener
 import net.casual.arcade.minigame.annotation.ListenerFlags
 import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
 import net.casual.arcade.minigame.events.MinigameCloseEvent
+import net.casual.arcade.minigame.events.MinigameInitializeEvent
 import net.casual.arcade.minigame.phase.Phase
 import net.casual.arcade.utils.IdentifierUtils
 import net.casual.arcade.utils.PlayerUtils.resetHealth
@@ -19,7 +20,7 @@ import net.casual.arcade.utils.set
 import net.casual.arcade.utils.teleportTo
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.level.GameType
+import net.minecraft.world.level.gamerules.GameRule
 import net.minecraft.world.level.gamerules.GameRules
 import twists.extension.PlayerFallWithoutDamageExtension.Companion.takeNoDamageOnNextFall
 import twists.minigame.TwistedMinigame
@@ -47,6 +48,9 @@ class WorldlessMinigame(
         this.tickrate.useGlobalManager = false
         this.levels.addAll(this.dimensions.all())
         this.players.keepPlayerData = false
+        
+        this.levels.spawn = WorldlessSpawnLocation(this.overworld)
+
 
     }
 
@@ -60,11 +64,12 @@ class WorldlessMinigame(
         this.dimensions.all().forEach { this.server.deleteCustomLevel(it) }
         this.dimensions = newDimensions
 
+        this.overworld.getChunk(0, 0)
         this.levels.spawn = WorldlessSpawnLocation(this.overworld)
 
         players.forEach {
             it.teleportTo(this.levels.spawn.get(it)!!)
-            //it.takeNoDamageOnNextFall() //TODO: hopefully unneeded now.
+            it.takeNoDamageOnNextFall() //TODO: hopefully unneeded now.
         }
     }
 
@@ -84,7 +89,6 @@ class WorldlessMinigame(
         }
         event.player.resetHealth()
         event.player.resetHunger()
-        event.player.setGameMode(GameType.SURVIVAL)
     }
 
     @Listener(flags = ListenerFlags.HAS_PLAYER)
