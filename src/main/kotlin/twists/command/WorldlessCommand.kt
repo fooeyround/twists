@@ -11,6 +11,7 @@ import net.minecraft.server.permissions.PermissionLevel
 
 import twists.worldless.WorldlessMinecraftServerExtension.Companion.worldlessState
 
+@Deprecated("use WorldlessMinigame instead")
 object WorldlessCommand {
 
 

@@ -10,4 +10,8 @@ abstract class TwistedMinigame(
 ): Minigame(server, uuid) {
     override val settings = TwistSettings(this)
 
+    init {
+        this.players.keepPlayerData = true
+    }
+
 }

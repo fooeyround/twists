@@ -1,10 +1,12 @@
 package twists.minigame.manhunt
 
 import com.mojang.serialization.MapCodec
+import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevels
 import net.casual.arcade.minigame.serialization.MinigameCreationContext
 import net.casual.arcade.minigame.serialization.MinigameFactory
 import net.casual.arcade.utils.serialization.codec.CodecProvider
 import net.minecraft.resources.Identifier
+import twists.util.LevelUtils
 
 
 class ManhuntMinigameFactory : MinigameFactory {
@@ -14,7 +16,8 @@ class ManhuntMinigameFactory : MinigameFactory {
 
 
     override fun create(context: MinigameCreationContext): ManhuntMinigame {
-        val worldless = ManhuntMinigame.createNewVanillaLikeLevels(context.server)
+        val worldless = LevelUtils.createNewVanillaLikeLevels(context.server)
+
         return ManhuntMinigame(
             context.server,
             context.uuid,

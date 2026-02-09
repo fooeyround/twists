@@ -49,7 +49,6 @@ class WorldlessMinigame(
     init {
         this.tickrate.useGlobalManager = false
         this.levels.addAll(this.dimensions.all())
-        this.players.keepPlayerData = false
 
         this.levels.spawn = WorldlessSpawnLocation(this.overworld, this.dimensions)
 
@@ -89,6 +88,7 @@ class WorldlessMinigame(
         if (event.minigame is WorldlessMinigame && event.minigame.phase > WorldlessPhase.Initialization) {
                 event.player.teleportTo( this.levels.spawn.get(event.player)!!)
         }
+        //TODO: this should be unneeded.
         event.player.resetHealth()
         event.player.resetHunger()
 

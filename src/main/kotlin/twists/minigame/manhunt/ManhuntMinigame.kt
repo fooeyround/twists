@@ -56,8 +56,7 @@ class ManhuntMinigame(
     init {
         this.tickrate.useGlobalManager = false
         this.levels.addAll(this.dimensions.all())
-        this.players.keepPlayerData = false
-        
+
         this.levels.spawn = ManhuntSpawnLocation(this.overworld, this.dimensions)
         this.settings.canPvp.set(false)
     }
@@ -102,24 +101,5 @@ class ManhuntMinigame(
 
     companion object {
         val ID = twists("manhunt")
-
-        fun createNewVanillaLikeLevels(server: MinecraftServer, seed: Long? = null): VanillaLikeLevels {
-            return VanillaLikeLevelsBuilder.build(server) {
-                for (dimension in listOf(VanillaDimension.Overworld, VanillaDimension.Nether, VanillaDimension.End)) {
-                    this.set(dimension) {
-                        dimensionKey(IdentifierUtils.random(TwistsUtils.MOD_ID) { "${dimension.getDimensionKey().identifier().path}_$it" })
-                        if (seed != null) {
-                            seed(seed)
-                        } else {
-                            randomSeed()
-                        }
-                        gameRules {
-                            set(GameRules.LOCATOR_BAR, false)
-                        }
-                        persistence(LevelPersistence.Temporary)
-                    }
-                }
-            }
-        }
     }
 }

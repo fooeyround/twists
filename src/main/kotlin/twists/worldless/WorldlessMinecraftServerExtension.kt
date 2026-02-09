@@ -39,6 +39,7 @@ import java.text.NumberFormat
 import java.util.*
 import kotlin.math.max
 
+@Deprecated("use WorldlessMinigame instead")
 class WorldlessMinecraftServerExtension(
     val server: MinecraftServer
 ): Extension {
