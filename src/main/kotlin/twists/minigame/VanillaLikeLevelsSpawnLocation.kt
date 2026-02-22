@@ -1,4 +1,4 @@
-package twists.minigame.manhunt
+package twists.minigame
 
 import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevels
 import net.casual.arcade.minigame.managers.MinigameLevelManager
@@ -8,14 +8,13 @@ import net.casual.arcade.utils.math.location.LocationWithLevel.Companion.asLocat
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.levelgen.Heightmap
-import net.minecraft.world.level.storage.LevelData.RespawnData
+import net.minecraft.world.level.storage.LevelData
 import net.minecraft.world.phys.Vec3
 
-
-class ManhuntSpawnLocation(val level: ServerLevel, val allowedLevels: VanillaLikeLevels? = null): MinigameLevelManager.SpawnLocation {
+class VanillaLikeLevelsSpawnLocation(val level: ServerLevel, val allowedLevels: VanillaLikeLevels? = null): MinigameLevelManager.SpawnLocation {
     override val overridesPlayerSpawnPoint: Boolean = true
     override fun get(player: ServerPlayer): LocationWithLevel<ServerLevel> {
-        val respawnData: RespawnData? = player.respawnConfig?.respawnData()
+        val respawnData: LevelData.RespawnData? = player.respawnConfig?.respawnData()
         if (respawnData != null) {
             val serverLevel: ServerLevel? = player.server.getLevel(respawnData.dimension())
             if (allowedLevels != null && allowedLevels.all().any { it == serverLevel }) {

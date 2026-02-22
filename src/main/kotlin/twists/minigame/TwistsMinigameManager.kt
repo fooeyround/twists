@@ -11,6 +11,7 @@ import net.casual.arcade.minigame.events.MinigameCloseEvent
 import net.casual.arcade.minigame.events.MinigameInitializeEvent
 import net.casual.arcade.minigame.serialization.MinigameCreationContext
 import net.casual.arcade.minigame.serialization.MinigameFactory
+import net.casual.arcade.minigame.utils.MinigameUtils.getMinigame
 import net.casual.arcade.scheduler.GlobalTickedScheduler
 import net.casual.arcade.utils.JsonUtils
 import net.casual.arcade.utils.PlayerUtils.hasPermission
@@ -61,10 +62,9 @@ class TwistsMinigameManager(
     }
 
     fun returnToLobby() {
-        val current = this.current
-        if (current != this.lobby) {
-            current.players.transferTo(this.lobby)
-            current.close()
+        if (this.current != this.lobby) {
+            this.current.players.transferTo(this.lobby)
+            this.current.close()
 
             GlobalTickedScheduler.later {
                 this.reloadMinigame(this.lobby.server)
@@ -122,7 +122,6 @@ class TwistsMinigameManager(
 
     private fun onLobbyClose(event: MinigameCloseEvent) {
         if (event.minigame == this.lobby) {
-//            val lobby = createLobby(event.minigame.server)
             reloadLobby(event.minigame.server)
         }
 
@@ -140,6 +139,8 @@ class TwistsMinigameManager(
     }
 
     private fun onPlayerJoin(event: PlayerJoinEvent) {
+        //Don't bring the player to the lobby if they are in a minigame outside the lobby.
+        if (event.player.getMinigame()?.let { !it.closed } ?: false) return
         this.current.players.add(event.player, admin = event.player.hasPermission(PermissionLevel.ADMINS))
     }
 

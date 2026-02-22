@@ -58,8 +58,10 @@ class LobbyCommand(val lobby: LobbyMinigame) : CommandTree {
 
     private fun startNextMinigame(context: CommandContext<CommandSourceStack>): Int {
         this.lobby.next ?: return context.source.fail("Cannot move to next minigame, it has not been set!")
-        this.lobby.moveToNextMinigame()
-        return context.source.success("Successfully moving to next minigame")
+        val success = this.lobby.moveToNextMinigame()
+        if (success) return context.source.success("Successfully moving to next minigame")
+
+        return context.source.fail("Failed to move to next minigame, it was not specified or closed!")
     }
 
     @Suppress("unused_parameter")

@@ -1,7 +1,6 @@
-package twists.minigame.manhunt
+package twists.minigame.deathswap.deathswap
 
 import com.mojang.serialization.MapCodec
-import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevels
 import net.casual.arcade.minigame.serialization.MinigameCreationContext
 import net.casual.arcade.minigame.serialization.MinigameFactory
 import net.casual.arcade.utils.serialization.codec.CodecProvider
@@ -9,15 +8,15 @@ import net.minecraft.resources.Identifier
 import twists.util.LevelUtils
 
 
-class ManhuntMinigameFactory : MinigameFactory {
+class DeathSwapMinigameFactory : MinigameFactory {
     override fun codec(): MapCodec<out MinigameFactory> {
         return CODEC
     }
 
 
-    override fun create(context: MinigameCreationContext): ManhuntMinigame {
+    override fun create(context: MinigameCreationContext): DeathSwapMinigame {
         val worlds = LevelUtils.createNewVanillaLikeLevels(context.server)
-        return ManhuntMinigame(
+        return DeathSwapMinigame(
             context.server,
             context.uuid,
             worlds
@@ -25,12 +24,12 @@ class ManhuntMinigameFactory : MinigameFactory {
 
     }
 
-    companion object : CodecProvider<ManhuntMinigameFactory> {
+    companion object : CodecProvider<DeathSwapMinigameFactory> {
         override val ID: Identifier
-            get() = ManhuntMinigame.ID
-        override val CODEC: MapCodec<out ManhuntMinigameFactory>
-            get() = MapCodec.unit(ManhuntMinigameFactory())
-        val DEFAULT = ManhuntMinigameFactory()
+            get() = DeathSwapMinigame.ID
+        override val CODEC: MapCodec<out DeathSwapMinigameFactory>
+            get() = MapCodec.unit(DeathSwapMinigameFactory())
+        val DEFAULT = DeathSwapMinigameFactory()
     }
 
 

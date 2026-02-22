@@ -19,7 +19,7 @@ internal object TeamCommandModifier : CommandTree {
             literal("manhunt") {
                 literal("with") {
                     argument("players", EntityArgument.players()) {
-                        argument("runner", EntityArgument.player()) {
+                        argument("runners", EntityArgument.players()) {
                             executes { createManhuntTeams(it) }
                         }
                         executes { createManhuntTeams(it) }
@@ -34,7 +34,7 @@ internal object TeamCommandModifier : CommandTree {
 
     private fun createManhuntTeams(context: CommandContext<CommandSourceStack>): Int {
         val players = EntityArgument.getPlayers(context, "players")
-        val runner = EntityArgument.getPlayer(context, "runner")
+        val runners = EntityArgument.getPlayers(context, "runners")
 
         val server = context.source.server
 
@@ -51,11 +51,11 @@ internal object TeamCommandModifier : CommandTree {
         runnersTeam.color = ChatFormatting.BLUE
         runnersTeam.setPlayerPrefix(Component.literal("").withStyle(ChatFormatting.BLUE))
 
-        players.filter { it != runner }.forEach {
+        players.filter { !runners.contains(it) }.forEach {
             it.addToTeam(huntersTeam)
         }
 
-        runner.addToTeam(runnersTeam)
+        runners.forEach { it.addToTeam(runnersTeam) }
 
 
 
@@ -66,7 +66,7 @@ internal object TeamCommandModifier : CommandTree {
     }
 
     private fun deleteManhuntTeams(context: CommandContext<CommandSourceStack>): Int {
-        TeamUtils.deleteAllRandomTeams(context.source.server.scoreboard)
+//        TeamUtils.deleteAllRandomTeams(context.source.server.scoreboard)
         return context.source.success(Component.translatable("minigame.command.team.randomizer.deleted"))
     }
 }

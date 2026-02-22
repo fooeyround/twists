@@ -1,14 +1,18 @@
 package twists.minigame.manhunt
 
 import net.casual.arcade.minigame.phase.Phase
+import net.casual.arcade.minigame.utils.MinigameUtils.launch
+import net.casual.arcade.scheduler.GlobalTickedScheduler
 import net.casual.arcade.utils.PlayerUtils.server
 import net.casual.arcade.utils.component.unitalicize
 import net.casual.arcade.utils.teleportTo
 import net.minecraft.core.Holder
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.component.ResolvableProfile
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.level.GameType
@@ -23,16 +27,15 @@ enum class ManhuntPhase(override val id: String) : Phase<ManhuntMinigame> {
         override fun start(minigame: ManhuntMinigame, previous: Phase<ManhuntMinigame>) {
             minigame.settings.canPvp.set(true)
             minigame.settings.canBreakBlocks.set(true)
-            minigame.players.playing.forEach {
-                it.setGameMode(GameType.SURVIVAL)
-            }
+
+
             minigame.overworld.dayTime = 0
             minigame.overworld.getChunk(0, 0)
             minigame.players.forEach {
                 it.teleportTo(minigame.levels.spawn.get(it)!!)
             }
 
-            //TOOD: allow better dynamic teams
+            //TODO: allow better dynamic teams
             val runners = minigame.players.playing.filter { it.team?.name == "runners" }
 
             var soulboundEnchantment: Holder.Reference<Enchantment>? = null
@@ -46,17 +49,17 @@ enum class ManhuntPhase(override val id: String) : Phase<ManhuntMinigame> {
             }
 
 
-                minigame.players.playing.filter { !runners.contains(it) }.forEach { player ->
-                    for (runner in runners) {
-                        var stack = ItemStack(Twists.TRACKING_COMPASS)
-                        stack.set(DataComponents.PROFILE, ResolvableProfile.createUnresolved(runner.uuid))
-                        stack.set(DataComponents.CUSTOM_NAME, Component.literal("Tracking Compass: ").unitalicize().append(runner.name))
-                        if (soulboundEnchantment != null) {
-                            stack.enchant(soulboundEnchantment, 1)
-                        }
-                        player.inventory.add(stack)
+            minigame.players.playing.filter { !runners.contains(it) }.forEach { player ->
+                    var stack = ItemStack(Twists.TRACKING_COMPASS)
+                    var tag = CompoundTag()
+                    tag.putString("trackingTeam", "runners")
+                    stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag))
+                    stack.set(DataComponents.CUSTOM_NAME, Component.literal("Tracking Compass").unitalicize())
+                    if (soulboundEnchantment != null) {
+                        stack.enchant(soulboundEnchantment, 1)
                     }
-                }
+                    player.inventory.add(stack)
+            }
 
 
 //            if (event.player.team?.name == "hunter") {
@@ -65,6 +68,11 @@ enum class ManhuntPhase(override val id: String) : Phase<ManhuntMinigame> {
 //                event.player.inventory.add(stack)
 //            }
 
+            GlobalTickedScheduler.later {
+                minigame.players.playing.forEach {
+                    it.setGameMode(GameType.SURVIVAL)
+                }
+            }
 
             minigame.setPhase(Playing)
         }

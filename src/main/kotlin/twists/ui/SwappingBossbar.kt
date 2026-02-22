@@ -7,17 +7,17 @@ import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.BossEvent
 
-class WorldlessBossbar: TimerBossbar() {
+class SwappingBossbar: TimerBossbar() {
     override fun getTitle(player: ServerPlayer): Component {
-        return Component.literal("World Resets in ${this.getRemainingDuration().formatMMSS()}")
+        return Component.literal("Swap in ${this.getRemainingDuration().formatMMSS()}")
     }
 
     override fun getProgress(player: ServerPlayer): Float {
-        return MathUtils.centeredScale(super.getProgress(player), 0.75F)
+        return MathUtils.centeredScale(super.getProgress(player), 1F)
     }
 
     override fun getColor(player: ServerPlayer): BossEvent.BossBarColor {
-        return BossEvent.BossBarColor.GREEN
+        return BossEvent.BossBarColor.RED
     }
 
     override fun getOverlay(player: ServerPlayer): BossEvent.BossBarOverlay {

@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.TooltipFlag
+import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.component.LodestoneTracker
 import net.minecraft.world.level.Level
 import xyz.nucleoid.packettweaker.PacketContext
@@ -39,7 +40,7 @@ class TrackingCompassItem(properties: Properties) : Item(properties), PolymerIte
         } else {
             stack.set(DataComponents.LODESTONE_TRACKER, LodestoneTracker(Optional.empty(), false))
         }
-        stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, itemStack.get(DataComponents.PROFILE) != null)
+        stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
         return stack
     }
 
@@ -49,7 +50,34 @@ class TrackingCompassItem(properties: Properties) : Item(properties), PolymerIte
 
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResult {
         val item = player.getItemInHand(hand)
-        val profile = item.components.get(DataComponents.PROFILE)
+//        val profile = item.components.get(DataComponents.PROFILE)
+        val customData: CustomData? = item.components.get(DataComponents.CUSTOM_DATA)
+        val trackablePlayers = level.players().filter {
+            val data = customData?.copyTag()?.getString("trackingTeam")
+            return@filter data != null && data.isPresent && data.get() == it.team?.name
+        }.sortedBy {
+            player.distanceTo(it)
+        }
+        if (trackablePlayers.isNotEmpty()) {
+            val trackedPlayer = trackablePlayers.first()
+            val playerPos = GlobalPos.of(trackedPlayer.level().dimension(), trackedPlayer.blockPosition())
+            item.set(DataComponents.LODESTONE_TRACKER, LodestoneTracker(Optional.of(playerPos), false))
+        }
+
+        level.playSound(
+            null,
+            player.blockPosition(),
+            SoundEvents.LODESTONE_COMPASS_LOCK,
+            SoundSource.PLAYERS,
+            1.0f,
+            1.0f
+        )
+
+        return InteractionResult.CONSUME
+
+        /*
+
+
         val loadStoneTracker = item.components.get(DataComponents.LODESTONE_TRACKER)
         if (profile != null) {
             val id = profile.uuid()
@@ -85,6 +113,7 @@ class TrackingCompassItem(properties: Properties) : Item(properties), PolymerIte
 //        }
 
         return super.use(level, player, hand)
+         */
     }
 
 

@@ -13,7 +13,11 @@ import net.casual.arcade.minigame.data.MinigameDataModules
 import net.casual.arcade.minigame.data.MinigameDataModules.Companion.get
 import net.casual.arcade.minigame.data.module.MinigameWorldData
 import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
+import net.casual.arcade.minigame.events.MinigameAddPlayerEvent
 import net.casual.arcade.minigame.events.MinigameInitializeEvent
+import net.casual.arcade.minigame.events.MinigameSetPlayingEvent
+import net.casual.arcade.minigame.gamemode.ExtendedGameMode
+import net.casual.arcade.minigame.gamemode.ExtendedGameMode.Companion.extendedGameMode
 import net.casual.arcade.minigame.managers.MinigameLevelManager
 import net.casual.arcade.minigame.phase.Phase
 import net.casual.arcade.minigame.serialization.MinigameCreationContext
@@ -30,6 +34,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes
 import net.minecraft.world.level.gamerules.GameRules
@@ -126,10 +131,12 @@ class LobbyMinigame(
 
 
     @Listener
-    private fun onMinigameAddNewPlayer(event: MinigameAddNewPlayerEvent) {
+    private fun onMinigameAddPlayer(event: MinigameAddNewPlayerEvent) {
+        event.player.extendedGameMode = ExtendedGameMode.Adventure
+        TwistsUtils.logger.info("event.player: ${event.player}")
         this.teleport(event.player)
-//        event.player.setGameMode(GameType.ADVENTURE)
     }
+
 
     @Listener
     private fun onPlayerVoidDamage(event: PlayerVoidDamageEvent) {
@@ -152,11 +159,11 @@ class LobbyMinigame(
     }
 
 
-    fun moveToNextMinigame() {
+    fun moveToNextMinigame(): Boolean {
         val next = this.next
         if (next == null || next.closed) {
             TwistsUtils.logger.error("Failed to move to next minigame, it was not specified or closed!")
-            return
+            return false
         }
 
         this.transferAdminAndSpectatorTeamsTo(next)
@@ -164,6 +171,7 @@ class LobbyMinigame(
         next.start()
 
         this.setPhase(LobbyPhase.Waiting)
+        return true
     }
 
 

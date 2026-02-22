@@ -24,4 +24,37 @@ object TwistsUtils {
         return this.root.resolve(next)
     }
 
+    fun <T> List<T>.randomDerangementBruteForce(): Map<T, T>? {
+        if (this.size <= 1) {
+            return null
+        }
+
+        val originalList = this
+        var shuffledList: List<T>
+
+        //TODO: DERANGED way to this. Use a better solution
+        //
+        do {
+            shuffledList = originalList.shuffled()
+        } while (originalList.indices.any { i -> originalList[i] == shuffledList[i] })
+
+        return originalList.zip(shuffledList).toMap()
+    }
+
+    fun <T> List<T>.singleLeftShiftedDerangement(): Map<T, T>? {
+        if (this.size <= 1) {
+            return null
+        }
+
+        val listA = this.shuffled()
+        val listB = ArrayList<T>()
+        listA.forEach { listB.add(it) }
+        listB.add(listB.removeAt(0))
+
+        return listA.zip(listB).toMap()
+    }
+
+
+
+
 }

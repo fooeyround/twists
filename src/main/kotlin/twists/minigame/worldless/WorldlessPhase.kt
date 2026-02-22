@@ -6,7 +6,7 @@ import net.casual.arcade.minigame.task.impl.BossbarTask.Companion.withDuration
 import net.casual.arcade.minigame.task.impl.PhaseChangeTask
 import net.casual.arcade.utils.TimeUtils.Ticks
 import net.casual.arcade.utils.teleportTo
-import twists.task.WorldlessBossbarTask
+import twists.task.SwappingBossbarTask
 
 internal const val INITIALIZATION_ID = "initialization"
 internal const val RESETTING_WORLD_ID = "resetting_world"
@@ -32,7 +32,7 @@ enum class WorldlessPhase(override val id: String): Phase<WorldlessMinigame> {
     },
     Playing(PLAYING_ID) {
         override fun start(minigame: WorldlessMinigame, previous: Phase<WorldlessMinigame>) {
-            val task = WorldlessBossbarTask(minigame)
+            val task = SwappingBossbarTask(minigame)
                 .withDuration(minigame.settings.worldResetTime - 1.Ticks)
                 .then(PhaseChangeTask(minigame, ResettingWorld))
             minigame.scheduler.schedulePhasedCancellable(minigame.settings.worldResetTime, task).runIfCancelled()

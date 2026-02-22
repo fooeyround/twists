@@ -34,9 +34,10 @@ dependencies {
     })
     modImplementation(libs.fabric.loader)
     modImplementation(libs.fabric.api)
-    modImplementation(libs.fabric.kotlin)
 
-    modImplementation(libs.arcade)
+    includeModImplementation(libs.fabric.kotlin)
+
+    includeModImplementation(libs.arcade)
     modImplementation(libs.polymer)
 
 }

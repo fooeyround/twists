@@ -5,34 +5,27 @@ import net.casual.arcade.events.GlobalEventHandler
 import net.casual.arcade.events.ListenerRegistry.Companion.register
 import net.casual.arcade.events.server.ServerRegisterCommandEvent
 import net.casual.arcade.events.server.ServerStartEvent
-import net.casual.arcade.events.server.player.PlayerJoinEvent
 import net.casual.arcade.minigame.data.MinigameDataModule.Provider.Companion.register
-import net.casual.arcade.minigame.events.MinigameCloseEvent
-import net.casual.arcade.minigame.serialization.MinigameCreationContext
 import net.casual.arcade.minigame.utils.MinigameRegistries
-import net.casual.arcade.minigame.utils.MinigameUtils.getMinigame
 import net.casual.arcade.scheduler.task.utils.TaskRegistries
-import net.casual.arcade.utils.PlayerUtils.players
 import net.casual.arcade.utils.serialization.codec.CodecProvider.Companion.register
 import net.fabricmc.api.DedicatedServerModInitializer
-import net.fabricmc.api.ModInitializer
-import net.minecraft.commands.Commands
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.enchantment.Enchantment
 import twists.command.TwistsCommand
 import twists.extension.PlayerFallWithoutDamageExtension
 import twists.item.TrackingCompassItem
 import twists.minigame.TwistsMinigameManager
+import twists.minigame.deathswap.deathswap.DeathSwapMinigameFactory
 import twists.minigame.lobby.LobbyData
-import twists.minigame.lobby.LobbyMinigame
 import twists.minigame.manhunt.ManhuntMinigameFactory
 import twists.minigame.manhunt.TeamCommandModifier
 import twists.minigame.worldless.WorldlessMinigameFactory
-import twists.task.WorldlessBossbarTask
+import twists.stats.TwistsStats
+import twists.task.SwappingBossbarTask
 import twists.util.ItemUtil
 import twists.util.TwistsUtils
 import twists.util.twists
@@ -55,6 +48,8 @@ object Twists: DedicatedServerModInitializer {
 
     override fun onInitializeServer() {
 
+        TwistsStats.load()
+
         LobbyData.register(MinigameRegistries.MINIGAME_DATA_MODULE_PROVIDER)
 
         WorldlessMinecraftServerExtension.registerEvents()
@@ -62,7 +57,8 @@ object Twists: DedicatedServerModInitializer {
 
         WorldlessMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
         ManhuntMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
-        Registry.register(TaskRegistries.TASK_FACTORY, WorldlessBossbarTask.id, WorldlessBossbarTask)
+        DeathSwapMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
+        Registry.register(TaskRegistries.TASK_FACTORY, SwappingBossbarTask.id, SwappingBossbarTask)
 
 
         this.minigames.registerEvents(GlobalEventHandler.Server)

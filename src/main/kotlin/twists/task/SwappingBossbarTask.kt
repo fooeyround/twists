@@ -8,12 +8,12 @@ import net.casual.arcade.minigame.task.impl.BossbarTask
 import net.casual.arcade.scheduler.task.SavableTask
 import net.casual.arcade.scheduler.task.Task
 import net.casual.arcade.scheduler.task.serialization.TaskSerializationContext
-import twists.ui.WorldlessBossbar
+import twists.ui.SwappingBossbar
 import twists.util.twists
 
-class WorldlessBossbarTask(
+class SwappingBossbarTask(
     minigame: Minigame
-): BossbarTask<WorldlessBossbar>(minigame, WorldlessBossbar()), SavableTask {
+): BossbarTask<SwappingBossbar>(minigame, SwappingBossbar()), SavableTask {
     override val id = Companion.id
 
     override fun serialize(context: TaskSerializationContext): JsonObject {
@@ -21,10 +21,10 @@ class WorldlessBossbarTask(
     }
 
     companion object: MinigameTaskFactory<Minigame> {
-        override val id = twists("worldless_boss_bar_task")
+        override val id = twists("swapping_boss_bar_task")
 
         override fun create(context: MinigameTaskCreationContext<Minigame>): Task {
-            return WorldlessBossbarTask(context.minigame).readData(context)
+            return SwappingBossbarTask(context.minigame).readData(context)
         }
     }
 }

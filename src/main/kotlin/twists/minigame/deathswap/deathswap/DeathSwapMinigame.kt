@@ -1,10 +1,13 @@
-package twists.minigame.manhunt
+package twists.minigame.deathswap.deathswap
 
 import net.casual.arcade.dimensions.level.vanilla.VanillaDimension
 import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevels
 import net.casual.arcade.dimensions.utils.deleteCustomLevel
+import net.casual.arcade.events.BuiltInEventPhases
+import net.casual.arcade.events.server.player.PlayerDeathEvent
 import net.casual.arcade.minigame.Minigame
 import net.casual.arcade.minigame.annotation.Listener
+import net.casual.arcade.minigame.annotation.ListenerFlags
 import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
 import net.casual.arcade.minigame.events.MinigameCloseEvent
 import net.casual.arcade.minigame.events.MinigameSetPlayingEvent
@@ -12,6 +15,7 @@ import net.casual.arcade.minigame.gamemode.ExtendedGameMode
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode.Companion.extendedGameMode
 import net.casual.arcade.minigame.phase.Phase
 import net.casual.arcade.utils.PlayerUtils.clearPlayerInventory
+import net.casual.arcade.utils.PlayerUtils.getKillCreditWith
 import net.casual.arcade.utils.PlayerUtils.resetExperience
 import net.casual.arcade.utils.PlayerUtils.resetHealth
 import net.casual.arcade.utils.PlayerUtils.resetHunger
@@ -19,22 +23,22 @@ import net.casual.arcade.utils.teleportTo
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.GameType
-import twists.minigame.VanillaLikeLevelsSpawnLocation
 import twists.minigame.TwistedMinigame
+import twists.minigame.VanillaLikeLevelsSpawnLocation
 import twists.util.twists
 import java.util.*
 
-class ManhuntMinigame(
+class DeathSwapMinigame(
     server: MinecraftServer,
     uuid: UUID,
     private var dimensions: VanillaLikeLevels,
-    private val factory: ManhuntMinigameFactory? = null
+    private val factory: DeathSwapMinigameFactory? = null
 ): TwistedMinigame(server, uuid) {
     override val id = ID
-    override val settings = ManhuntSettings(this)
+    override val settings = DeathSwapSettings(this)
 
     override fun phases(): Collection<Phase<out Minigame>> {
-        return ManhuntPhase.entries
+        return DeathSwapPhase.entries
     }
 
     val overworld: ServerLevel
@@ -62,7 +66,7 @@ class ManhuntMinigame(
         event.player.resetHealth()
         event.player.resetHunger()
         event.player.setGameMode(GameType.SURVIVAL)
-        if (event.minigame is ManhuntMinigame && event.minigame.phase > ManhuntPhase.Initialization) {
+        if (event.minigame is DeathSwapMinigame && event.minigame.phase > DeathSwapPhase.Initialization) {
                 event.player.teleportTo( this.levels.spawn.get(event.player)!!)
         }
     }
@@ -86,10 +90,16 @@ class ManhuntMinigame(
     }
 
 
+    @Listener(flags = ListenerFlags.IS_PLAYING, phase = BuiltInEventPhases.POST)
+    private fun onPlayerDeath(event: PlayerDeathEvent) {
+        this.players.setSpectating(event.player)
+    }
+
+
 
 
 
     companion object {
-        val ID = twists("manhunt")
+        val ID = twists("death_swap")
     }
 }
