@@ -1,4 +1,4 @@
-package twists.minigame
+package twists.minigame.shared
 
 import net.casual.arcade.minigame.settings.MinigameSettings
 import net.casual.arcade.minigame.settings.display.DisplayableSettingsDefaults

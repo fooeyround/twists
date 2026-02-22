@@ -1,4 +1,4 @@
-package twists.minigame
+package twists.minigame.shared
 
 import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevels
 import net.casual.arcade.minigame.managers.MinigameLevelManager

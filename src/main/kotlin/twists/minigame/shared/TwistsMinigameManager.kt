@@ -1,4 +1,4 @@
-package twists.minigame
+package twists.minigame.shared
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
@@ -14,15 +14,11 @@ import net.casual.arcade.minigame.serialization.MinigameFactory
 import net.casual.arcade.minigame.utils.MinigameUtils.getMinigame
 import net.casual.arcade.scheduler.GlobalTickedScheduler
 import net.casual.arcade.utils.JsonUtils
-import net.casual.arcade.utils.PlayerUtils.hasPermission
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.permissions.PermissionLevel
 import twists.minigame.lobby.LobbyMinigame
 import twists.minigame.manhunt.ManhuntMinigameFactory
 import twists.util.TwistsUtils
 import java.nio.file.Path
-import kotlin.io.path.createDirectories
-import kotlin.io.path.createFile
 import kotlin.io.path.notExists
 
 

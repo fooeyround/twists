@@ -25,7 +25,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.gamerules.GameRules
 import twists.extension.PlayerFallWithoutDamageExtension.Companion.takeNoDamageOnNextFall
-import twists.minigame.TwistedMinigame
+import twists.minigame.shared.TwistedMinigame
 import twists.util.TwistsUtils
 import twists.util.twists
 import java.util.*

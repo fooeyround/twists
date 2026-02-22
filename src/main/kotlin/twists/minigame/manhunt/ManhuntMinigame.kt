@@ -22,8 +22,8 @@ import net.casual.arcade.utils.teleportTo
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.GameType
-import twists.minigame.VanillaLikeLevelsSpawnLocation
-import twists.minigame.TwistedMinigame
+import twists.minigame.shared.VanillaLikeLevelsSpawnLocation
+import twists.minigame.shared.TwistedMinigame
 import twists.util.twists
 import java.util.*
 

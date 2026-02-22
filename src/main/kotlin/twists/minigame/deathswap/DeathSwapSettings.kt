@@ -1,7 +1,7 @@
 package twists.minigame.deathswap
 
 import net.casual.arcade.minigame.settings.display.DisplayableSettingsDefaults
-import twists.minigame.TwistSettings
+import twists.minigame.shared.TwistSettings
 import net.casual.arcade.minigame.settings.display.MenuGameSettingBuilder.Companion.time
 import net.casual.arcade.utils.ItemUtils
 import net.casual.arcade.utils.ItemUtils.named

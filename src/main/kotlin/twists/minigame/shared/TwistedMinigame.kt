@@ -1,20 +1,16 @@
-package twists.minigame
+package twists.minigame.shared
 
 import net.casual.arcade.events.server.player.PlayerSetSneakingEvent
 import net.casual.arcade.minigame.Minigame
 import net.casual.arcade.minigame.annotation.Listener
 import net.casual.arcade.minigame.annotation.ListenerFlags
-import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
 import net.casual.arcade.minigame.events.MinigameAddPlayerEvent
 import net.casual.arcade.minigame.events.MinigameSetSpectatingEvent
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode.Companion.extendedGameMode
 import net.casual.arcade.utils.PlayerUtils.revokeAllAdvancements
-import net.casual.arcade.utils.TimeUtils.Ticks
 import net.casual.arcade.utils.teleportTo
-import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
-import net.minecraft.world.phys.Vec3
 import twists.stats.TwistsStats
 import twists.util.TwistsUtils
 import java.util.UUID
