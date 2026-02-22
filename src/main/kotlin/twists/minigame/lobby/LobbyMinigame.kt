@@ -133,6 +133,7 @@ class LobbyMinigame(
     @Listener
     private fun onMinigameAddPlayer(event: MinigameAddNewPlayerEvent) {
         event.player.extendedGameMode = ExtendedGameMode.Adventure
+        this.players.setPlaying(event.player)
         TwistsUtils.logger.info("event.player: ${event.player}")
         this.teleport(event.player)
     }

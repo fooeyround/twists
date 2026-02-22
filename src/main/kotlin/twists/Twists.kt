@@ -29,7 +29,6 @@ import twists.task.SwappingBossbarTask
 import twists.util.ItemUtil
 import twists.util.TwistsUtils
 import twists.util.twists
-import twists.worldless.WorldlessMinecraftServerExtension
 
 object Twists: DedicatedServerModInitializer {
 
@@ -52,7 +51,6 @@ object Twists: DedicatedServerModInitializer {
 
         LobbyData.register(MinigameRegistries.MINIGAME_DATA_MODULE_PROVIDER)
 
-        WorldlessMinecraftServerExtension.registerEvents()
         PlayerFallWithoutDamageExtension.registerEvents()
 
         WorldlessMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)

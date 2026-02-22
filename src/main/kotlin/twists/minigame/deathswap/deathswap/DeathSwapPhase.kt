@@ -5,6 +5,7 @@ import net.casual.arcade.minigame.task.impl.BossbarTask.Companion.then
 import net.casual.arcade.minigame.task.impl.BossbarTask.Companion.withDuration
 import net.casual.arcade.minigame.task.impl.PhaseChangeTask
 import net.casual.arcade.scheduler.GlobalTickedScheduler
+import net.casual.arcade.utils.PlayerUtils.clearPlayerInventory
 import net.casual.arcade.utils.TimeUtils.Seconds
 import net.casual.arcade.utils.TimeUtils.Ticks
 import net.casual.arcade.utils.math.location.LocationWithLevel.Companion.locationWithLevel
@@ -21,14 +22,16 @@ internal const val SWAPPING_PHASE = "swapping"
 enum class DeathSwapPhase(override val id: String) : Phase<DeathSwapMinigame> {
     Initialization(INITIALIZATION_ID) {
         override fun start(minigame: DeathSwapMinigame, previous: Phase<DeathSwapMinigame>) {
-            minigame.settings.canPvp.set(true)
+            minigame.settings.canPvp.set(false)
             minigame.settings.canBreakBlocks.set(true)
+            minigame.settings.tickFreezeOnPause.set(true)
 
 
             minigame.overworld.dayTime = 1000
             minigame.overworld.getChunk(0, 0)
             minigame.players.forEach {
                 it.teleportTo(minigame.levels.spawn.get(it)!!)
+                it.clearPlayerInventory()
             }
 
             GlobalTickedScheduler.later {

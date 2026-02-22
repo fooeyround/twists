@@ -1,11 +1,14 @@
 package twists.item
 
 import eu.pb4.polymer.core.api.item.PolymerItem
+import net.casual.arcade.utils.PlayerUtils.username
 import net.casual.arcade.utils.uuid
+import net.minecraft.ChatFormatting
 import net.minecraft.core.GlobalPos
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
@@ -17,6 +20,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.component.LodestoneTracker
+import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
 import xyz.nucleoid.packettweaker.PacketContext
 import java.util.*
@@ -52,9 +56,9 @@ class TrackingCompassItem(properties: Properties) : Item(properties), PolymerIte
         val item = player.getItemInHand(hand)
 //        val profile = item.components.get(DataComponents.PROFILE)
         val customData: CustomData? = item.components.get(DataComponents.CUSTOM_DATA)
+        val data = customData?.copyTag()?.getString("trackingTeam") ?: return InteractionResult.FAIL
         val trackablePlayers = level.players().filter {
-            val data = customData?.copyTag()?.getString("trackingTeam")
-            return@filter data != null && data.isPresent && data.get() == it.team?.name
+            return@filter it.gameMode()?.isSurvival ?: false && data.isPresent && data.get() == it.team?.name
         }.sortedBy {
             player.distanceTo(it)
         }
@@ -62,16 +66,23 @@ class TrackingCompassItem(properties: Properties) : Item(properties), PolymerIte
             val trackedPlayer = trackablePlayers.first()
             val playerPos = GlobalPos.of(trackedPlayer.level().dimension(), trackedPlayer.blockPosition())
             item.set(DataComponents.LODESTONE_TRACKER, LodestoneTracker(Optional.of(playerPos), false))
+
+            if (player is ServerPlayer && trackablePlayers is ServerPlayer) {
+                player.sendSystemMessage(Component.literal("Tracking ${(trackedPlayer as ServerPlayer).username}").withStyle(ChatFormatting.RED), true)
+            }
+
+
         }
 
         level.playSound(
             null,
             player.blockPosition(),
-            SoundEvents.LODESTONE_COMPASS_LOCK,
+            if(trackablePlayers.isNotEmpty()) SoundEvents.LODESTONE_COMPASS_LOCK else SoundEvents.BEACON_DEACTIVATE,
             SoundSource.PLAYERS,
             1.0f,
             1.0f
         )
+
 
         return InteractionResult.CONSUME
 

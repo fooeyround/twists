@@ -3,6 +3,7 @@ package twists.minigame.manhunt
 import net.casual.arcade.minigame.settings.display.DisplayableSettingsDefaults
 import twists.minigame.TwistSettings
 import net.casual.arcade.minigame.settings.display.MenuGameSettingBuilder.Companion.time
+import net.casual.arcade.minigame.settings.display.MenuGameSettingBuilder.Companion.bool
 import net.casual.arcade.utils.ItemUtils
 import net.casual.arcade.utils.ItemUtils.named
 import net.casual.arcade.utils.TimeUtils.Minutes
@@ -13,6 +14,10 @@ class ManhuntSettings(
     defaults: DisplayableSettingsDefaults = DisplayableSettingsDefaults()
 ): TwistSettings(minigame, defaults) {
 
-
+    var intentionalGameDesign by this.register(bool {
+        name = "intentional_game_design"
+        display = Items.WIND_CHARGE.named("Enable Intentional Game Design")
+        value = true
+    })
 
 }

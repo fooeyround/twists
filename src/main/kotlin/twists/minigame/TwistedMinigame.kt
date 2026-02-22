@@ -5,11 +5,18 @@ import net.casual.arcade.minigame.Minigame
 import net.casual.arcade.minigame.annotation.Listener
 import net.casual.arcade.minigame.annotation.ListenerFlags
 import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
+import net.casual.arcade.minigame.events.MinigameAddPlayerEvent
+import net.casual.arcade.minigame.events.MinigameSetSpectatingEvent
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode.Companion.extendedGameMode
+import net.casual.arcade.utils.PlayerUtils.revokeAllAdvancements
+import net.casual.arcade.utils.TimeUtils.Ticks
+import net.casual.arcade.utils.teleportTo
 import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
+import net.minecraft.world.phys.Vec3
 import twists.stats.TwistsStats
+import twists.util.TwistsUtils
 import java.util.UUID
 import kotlin.math.abs
 
@@ -20,7 +27,15 @@ abstract class TwistedMinigame(
     override val settings = TwistSettings(this)
 
     init {
-        this.players.keepPlayerData = true
+        this.players.keepPlayerData = false
+    }
+
+    @Listener
+    private fun minigameAddPlayers(event: MinigameAddPlayerEvent) {
+        event.player.revokeAllAdvancements()
+
+        TwistsUtils.logger.info("TTT ${event.player}")
+
     }
 
 
@@ -37,6 +52,17 @@ abstract class TwistedMinigame(
                 player.extendedGameMode = mode
             } else {
                 last.modify { this.server.tickCount }
+            }
+        }
+    }
+
+    @Listener
+    private fun onSetSpectating(event: MinigameSetSpectatingEvent) {
+        event.player.extendedGameMode = ExtendedGameMode.AdventureSpectator
+        this.effects.addFullbright(event.player)
+        if (!this.levels.has(event.player.level())) {
+            this.levels.spawn.get(event.player)?.let {
+                event.player.teleportTo(it)
             }
         }
     }

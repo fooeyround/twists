@@ -3,8 +3,11 @@ package twists.minigame.manhunt
 import net.casual.arcade.dimensions.level.vanilla.VanillaDimension
 import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevels
 import net.casual.arcade.dimensions.utils.deleteCustomLevel
+import net.casual.arcade.events.BuiltInEventPhases
+import net.casual.arcade.events.server.player.PlayerDeathEvent
 import net.casual.arcade.minigame.Minigame
 import net.casual.arcade.minigame.annotation.Listener
+import net.casual.arcade.minigame.annotation.ListenerFlags
 import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
 import net.casual.arcade.minigame.events.MinigameCloseEvent
 import net.casual.arcade.minigame.events.MinigameSetPlayingEvent
@@ -85,7 +88,17 @@ class ManhuntMinigame(
         player.extendedGameMode = ExtendedGameMode.Survival
     }
 
+    @Listener(flags = ListenerFlags.IS_PLAYING, phase = BuiltInEventPhases.POST)
+    private fun onPlayerDeath(event: PlayerDeathEvent) {
+        if (event.player.team?.name == "runners") {
+            this.players.setSpectating(event.player)
+        }
+    }
 
+
+//    @Listener
+//    private fun intentionalGameDesign(event: UseBlockEvent) {
+//    }
 
 
 

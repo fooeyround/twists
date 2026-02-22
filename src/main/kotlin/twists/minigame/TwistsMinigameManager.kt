@@ -141,7 +141,7 @@ class TwistsMinigameManager(
     private fun onPlayerJoin(event: PlayerJoinEvent) {
         //Don't bring the player to the lobby if they are in a minigame outside the lobby.
         if (event.player.getMinigame()?.let { !it.closed } ?: false) return
-        this.current.players.add(event.player, admin = event.player.hasPermission(PermissionLevel.ADMINS))
+        this.current.players.add(event.player) // , admin = event.player.hasPermission(PermissionLevel.ADMINS)
     }
 
     private fun readEventConfig(): EventConfiguration {

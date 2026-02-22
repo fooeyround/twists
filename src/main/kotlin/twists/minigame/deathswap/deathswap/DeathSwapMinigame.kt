@@ -51,6 +51,7 @@ class DeathSwapMinigame(
 
         this.levels.spawn = VanillaLikeLevelsSpawnLocation(this.overworld, this.dimensions)
         this.settings.canPvp.set(false)
+
     }
 
     @Listener
@@ -84,6 +85,7 @@ class DeathSwapMinigame(
 
         player.removeVehicle()
         player.setGlowingTag(false)
+
 
 //        player.setGameMode(GameType.SURVIVAL)
         player.extendedGameMode = ExtendedGameMode.Survival

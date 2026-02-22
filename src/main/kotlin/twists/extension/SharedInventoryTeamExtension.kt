@@ -1,7 +1,6 @@
-package twists.sharedInventory
+package twists.extension
 
 import net.casual.arcade.extensions.SerializableExtension
-import net.minecraft.resources.Identifier
 import net.minecraft.world.ItemStackWithSlot
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.level.storage.ValueInput
