@@ -1,4 +1,4 @@
-package twists.minigame.deathswap.deathswap
+package twists.minigame.deathswap
 
 import net.casual.arcade.minigame.phase.Phase
 import net.casual.arcade.minigame.task.impl.BossbarTask.Companion.then
@@ -6,7 +6,6 @@ import net.casual.arcade.minigame.task.impl.BossbarTask.Companion.withDuration
 import net.casual.arcade.minigame.task.impl.PhaseChangeTask
 import net.casual.arcade.scheduler.GlobalTickedScheduler
 import net.casual.arcade.utils.PlayerUtils.clearPlayerInventory
-import net.casual.arcade.utils.TimeUtils.Seconds
 import net.casual.arcade.utils.TimeUtils.Ticks
 import net.casual.arcade.utils.math.location.LocationWithLevel.Companion.locationWithLevel
 import net.casual.arcade.utils.teleportTo

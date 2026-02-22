@@ -1,4 +1,4 @@
-package twists.minigame.deathswap.deathswap
+package twists.minigame.deathswap
 
 import net.casual.arcade.minigame.settings.display.DisplayableSettingsDefaults
 import twists.minigame.TwistSettings

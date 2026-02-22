@@ -19,7 +19,7 @@ import twists.command.TwistsCommand
 import twists.extension.PlayerFallWithoutDamageExtension
 import twists.item.TrackingCompassItem
 import twists.minigame.TwistsMinigameManager
-import twists.minigame.deathswap.deathswap.DeathSwapMinigameFactory
+import twists.minigame.deathswap.DeathSwapMinigameFactory
 import twists.minigame.lobby.LobbyData
 import twists.minigame.manhunt.ManhuntMinigameFactory
 import twists.minigame.manhunt.TeamCommandModifier

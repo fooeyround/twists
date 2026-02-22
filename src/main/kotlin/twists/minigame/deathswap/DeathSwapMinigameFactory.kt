@@ -1,4 +1,4 @@
-package twists.minigame.deathswap.deathswap
+package twists.minigame.deathswap
 
 import com.mojang.serialization.MapCodec
 import net.casual.arcade.minigame.serialization.MinigameCreationContext
