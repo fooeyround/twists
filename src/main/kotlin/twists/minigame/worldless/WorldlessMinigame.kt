@@ -93,7 +93,7 @@ class WorldlessMinigame(
                             randomSeed()
                         }
                         gameRules {
-                            set(GameRules.IMMEDIATE_RESPAWN, true)
+                            set(GameRules.IMMEDIATE_RESPAWN, true, server)
                         }
                         //TODO: should there be an option to kept them?
                         persistence(LevelPersistence.Temporary)
