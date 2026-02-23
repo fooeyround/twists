@@ -30,7 +30,7 @@ abstract class TwistedMinigame(
     private fun minigameAddPlayers(event: MinigameAddPlayerEvent) {
         event.player.revokeAllAdvancements()
 
-        TwistsUtils.logger.info("TTT ${event.player}")
+//        TwistsUtils.logger.info("TTT ${event.player}")
 
     }
 

@@ -22,17 +22,19 @@ import net.casual.arcade.utils.teleportTo
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.GameType
+import twists.event.BedExplodeEvent
 import twists.minigame.shared.VanillaLikeLevelsSpawnLocation
 import twists.minigame.shared.TwistedMinigame
+import twists.minigame.shared.VanillaLikeTwistedMinigame
 import twists.util.twists
 import java.util.*
 
 class ManhuntMinigame(
     server: MinecraftServer,
     uuid: UUID,
-    private var dimensions: VanillaLikeLevels,
+    dimensions: VanillaLikeLevels,
     private val factory: ManhuntMinigameFactory? = null
-): TwistedMinigame(server, uuid) {
+): VanillaLikeTwistedMinigame(server, uuid, dimensions) {
     override val id = ID
     override val settings = ManhuntSettings(this)
 
@@ -40,52 +42,9 @@ class ManhuntMinigame(
         return ManhuntPhase.entries
     }
 
-    val overworld: ServerLevel
-        get() = this.dimensions.getOrThrow(VanillaDimension.Overworld)
-
-
     init {
         this.tickrate.useGlobalManager = false
-        this.levels.addAll(this.dimensions.all())
-
-        this.levels.spawn = VanillaLikeLevelsSpawnLocation(this.overworld, this.dimensions)
         this.settings.canPvp.set(false)
-    }
-
-    @Listener
-    private fun onMinigameClose(event: MinigameCloseEvent) {
-        for (level in this.dimensions.all()) {
-                this.server.deleteCustomLevel(level)
-        }
-    }
-
-
-    @Listener
-    private fun onMinigamePlayerJoin(event: MinigameAddNewPlayerEvent) {
-        event.player.resetHealth()
-        event.player.resetHunger()
-        event.player.setGameMode(GameType.SURVIVAL)
-        if (event.minigame is ManhuntMinigame && event.minigame.phase > ManhuntPhase.Initialization) {
-                event.player.teleportTo( this.levels.spawn.get(event.player)!!)
-        }
-    }
-
-    @Listener
-    private fun onSetPlaying(event: MinigameSetPlayingEvent) {
-        val player = event.player
-        player.isInvisible = false
-        player.closeContainer()
-
-        player.resetHunger()
-        player.resetExperience()
-        player.clearPlayerInventory()
-        player.removeAllEffects()
-
-        player.removeVehicle()
-        player.setGlowingTag(false)
-
-//        player.setGameMode(GameType.SURVIVAL)
-        player.extendedGameMode = ExtendedGameMode.Survival
     }
 
     @Listener(flags = ListenerFlags.IS_PLAYING, phase = BuiltInEventPhases.POST)
@@ -96,9 +55,12 @@ class ManhuntMinigame(
     }
 
 
-//    @Listener
-//    private fun intentionalGameDesign(event: UseBlockEvent) {
-//    }
+    @Listener
+    private fun intentionalGameDesign(event: BedExplodeEvent) {
+        if (!this.settings.intentionalGameDesign) {
+            event.cancel()
+        }
+    }
 
 
 

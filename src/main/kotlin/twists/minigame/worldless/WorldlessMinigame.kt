@@ -26,6 +26,7 @@ import net.minecraft.world.level.GameType
 import net.minecraft.world.level.gamerules.GameRules
 import twists.extension.PlayerFallWithoutDamageExtension.Companion.takeNoDamageOnNextFall
 import twists.minigame.shared.TwistedMinigame
+import twists.minigame.shared.VanillaLikeLevelsSpawnLocation
 import twists.util.TwistsUtils
 import twists.util.twists
 import java.util.*
@@ -50,7 +51,7 @@ class WorldlessMinigame(
         this.tickrate.useGlobalManager = false
         this.levels.addAll(this.dimensions.all())
 
-        this.levels.spawn = WorldlessSpawnLocation(this.overworld, this.dimensions)
+        this.levels.spawn = VanillaLikeLevelsSpawnLocation(this.overworld, this.dimensions)
 
 
     }
@@ -66,7 +67,7 @@ class WorldlessMinigame(
         this.dimensions = newDimensions
 
         this.overworld.getChunk(0, 0)
-        this.levels.spawn = WorldlessSpawnLocation(this.overworld, this.dimensions)
+        this.levels.spawn = VanillaLikeLevelsSpawnLocation(this.overworld, this.dimensions)
 
         players.forEach {
             it.teleportTo(this.levels.spawn.get(it)!!)

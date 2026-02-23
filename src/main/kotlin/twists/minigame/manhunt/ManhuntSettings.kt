@@ -15,6 +15,7 @@ class ManhuntSettings(
         name = "intentional_game_design"
         display = Items.WIND_CHARGE.named("Enable Intentional Game Design")
         value = true
+        defaults.options(this)
     })
 
 }
