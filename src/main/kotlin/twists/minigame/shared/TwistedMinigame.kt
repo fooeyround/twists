@@ -34,7 +34,6 @@ abstract class TwistedMinigame(
 
     }
 
-
     @Listener(flags = ListenerFlags.IS_SPECTATOR)
     private fun onPlayerSneak(event: PlayerSetSneakingEvent) {
         val (player, sneaking) = event

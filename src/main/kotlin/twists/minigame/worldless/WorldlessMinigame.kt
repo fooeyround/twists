@@ -27,6 +27,7 @@ import net.minecraft.world.level.gamerules.GameRules
 import twists.extension.PlayerFallWithoutDamageExtension.Companion.takeNoDamageOnNextFall
 import twists.minigame.shared.TwistedMinigame
 import twists.minigame.shared.VanillaLikeLevelsSpawnLocation
+import twists.minigame.shared.VanillaLikeTwistedMinigame
 import twists.util.TwistsUtils
 import twists.util.twists
 import java.util.*
@@ -36,28 +37,16 @@ class WorldlessMinigame(
     uuid: UUID,
     private var dimensions: VanillaLikeLevels,
     private val factory: WorldlessMinigameFactory? = null
-): TwistedMinigame(server, uuid) {
+): VanillaLikeTwistedMinigame(server, uuid, dimensions) {
     override val id = ID
     override val settings = WorldlessSettings(this)
     override fun phases(): Collection<Phase<out Minigame>> {
         return WorldlessPhase.entries
     }
 
-    val overworld: ServerLevel
-        get() = this.dimensions.getOrThrow(VanillaDimension.Overworld)
-
-
     init {
         this.tickrate.useGlobalManager = false
-        this.levels.addAll(this.dimensions.all())
-
-        this.levels.spawn = VanillaLikeLevelsSpawnLocation(this.overworld, this.dimensions)
-
-
     }
-
-
-
 
     internal fun switchToNewWorld() {
         val newDimensions = createNewVanillaLikeLevels(this.server)
@@ -75,58 +64,20 @@ class WorldlessMinigame(
         }
     }
 
-
-    @Listener
-    private fun onMinigameClose(event: MinigameCloseEvent) {
-        for (level in this.dimensions.all()) {
-                this.server.deleteCustomLevel(level)
-        }
-    }
-
-
-    @Listener
-    private fun onMinigamePlayerJoin(event: MinigameAddNewPlayerEvent) {
-        if (event.minigame is WorldlessMinigame && event.minigame.phase > WorldlessPhase.Initialization) {
-                event.player.teleportTo( this.levels.spawn.get(event.player)!!)
-        }
-        //TODO: this should be unneeded.
-        event.player.resetHealth()
-        event.player.resetHunger()
-
-    }
-
+    /*
     @Listener(flags = ListenerFlags.HAS_PLAYER)
     private fun onPlayerRespawn(event: PlayerRespawnEvent) {
         val player = event.player
-//
-//        player.lastDeathLocation.ifPresent { pos ->
-//            val level = player.server.getLevel(pos.dimension)
-//            if (level != null && this.levels.has(level)) {
-//                val location = pos.pos.center.withRotation(player.rotationVector).with(level)
-//                player.teleportTo(location)
-//            }
-//        }
+
+        player.lastDeathLocation.ifPresent { pos ->
+            val level = player.server.getLevel(pos.dimension)
+            if (level != null && this.levels.has(level)) {
+                val location = pos.pos.center.withRotation(player.rotationVector).with(level)
+                player.teleportTo(location)
+            }
+        }
     }
-
-
-    @Listener
-    private fun onSetPlaying(event: MinigameSetPlayingEvent) {
-        val player = event.player
-        player.isInvisible = false
-        player.closeContainer()
-
-        player.resetHunger()
-        player.resetExperience()
-        player.clearPlayerInventory()
-        player.removeAllEffects()
-
-        player.removeVehicle()
-        player.setGlowingTag(false)
-
-        player.setGameMode(GameType.SURVIVAL)
-    }
-
-
+    */
 
     companion object {
         val ID = twists("worldless")
