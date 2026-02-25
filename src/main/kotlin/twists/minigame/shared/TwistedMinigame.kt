@@ -5,12 +5,17 @@ import net.casual.arcade.minigame.Minigame
 import net.casual.arcade.minigame.annotation.Listener
 import net.casual.arcade.minigame.annotation.ListenerFlags
 import net.casual.arcade.minigame.events.MinigameAddPlayerEvent
+import net.casual.arcade.minigame.events.MinigameCloseEvent
+import net.casual.arcade.minigame.events.MinigameSetPlayingEvent
 import net.casual.arcade.minigame.events.MinigameSetSpectatingEvent
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode.Companion.extendedGameMode
 import net.casual.arcade.utils.PlayerUtils.revokeAllAdvancements
+import net.casual.arcade.utils.TeamUtils.asPlayerTeam
 import net.casual.arcade.utils.teleportTo
 import net.minecraft.server.MinecraftServer
+import twists.extension.SharedInventoryTeamExtension
+import twists.extension.SharedInventoryTeamExtension.Companion.sharedInventoryExtension
 import twists.stats.TwistsStats
 import twists.util.TwistsUtils
 import java.util.UUID
@@ -32,6 +37,21 @@ abstract class TwistedMinigame(
 
 //        TwistsUtils.logger.info("TTT ${event.player}")
 
+    }
+
+    //TODO: allow the setting to be updated mid game
+    @Listener
+    private fun communalPocketsOnSetPlaying(event: MinigameSetPlayingEvent) {
+        event.player.team?.let {
+            it.sharedInventoryExtension.shareLevel = this.settings.communalPockets
+        }
+    }
+
+    @Listener
+    private fun communalPocketsOnMinigameClose(event: MinigameCloseEvent) {
+        (event.minigame.teams.getPlayingTeams() + event.minigame.teams.getEliminatedTeams()).forEach {
+            it.sharedInventoryExtension.shareLevel = SharedInventoryTeamExtension.ShareLevel.None
+        }
     }
 
     @Listener(flags = ListenerFlags.IS_SPECTATOR)

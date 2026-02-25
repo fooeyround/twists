@@ -17,6 +17,7 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.world.item.enchantment.Enchantment
 import twists.command.TwistsCommand
 import twists.extension.PlayerFallWithoutDamageExtension
+import twists.extension.SharedInventoryTeamExtension
 import twists.item.TrackingCompassItem
 import twists.minigame.shared.TwistsMinigameManager
 import twists.minigame.deathswap.DeathSwapMinigameFactory
@@ -52,6 +53,7 @@ object Twists: DedicatedServerModInitializer {
         LobbyData.register(MinigameRegistries.MINIGAME_DATA_MODULE_PROVIDER)
 
         PlayerFallWithoutDamageExtension.registerEvents()
+        SharedInventoryTeamExtension.registerEvents()
 
         WorldlessMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
         ManhuntMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)

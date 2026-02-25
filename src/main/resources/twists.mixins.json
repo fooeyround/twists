@@ -7,7 +7,9 @@
     "feature.event.bedExplodeEvent.BedBlockMixin",
     "feature.soulbound.EntityEquipmentMixin",
     "feature.soulbound.InventoryMixin",
-    "feature.soulbound.ServerPlayerMixin"
+    "feature.soulbound.ServerPlayerMixin",
+    "feature.twist.sharedInventory.InventoryMixin",
+    "feature.twist.sharedInventory.PlayerEquipmentMixin",
   ],
   "injectors": {
     "defaultRequire": 1
