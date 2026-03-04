@@ -10,7 +10,7 @@ import twists.util.LevelUtils
 
 class DeathSwapMinigameFactory : MinigameFactory {
     override fun codec(): MapCodec<out MinigameFactory> {
-        return CODEC
+        return codec
     }
 
 
@@ -25,11 +25,10 @@ class DeathSwapMinigameFactory : MinigameFactory {
     }
 
     companion object : CodecProvider<DeathSwapMinigameFactory> {
-        override val ID: Identifier
+        override val id: Identifier
             get() = DeathSwapMinigame.ID
-        override val CODEC: MapCodec<out DeathSwapMinigameFactory>
+        override val codec: MapCodec<out DeathSwapMinigameFactory>
             get() = MapCodec.unit(DeathSwapMinigameFactory())
-        val DEFAULT = DeathSwapMinigameFactory()
     }
 
 

@@ -98,7 +98,8 @@ class TwistsMinigameManager(
 
     private fun reloadMinigame(server: MinecraftServer) {
         this.minigame?.close()
-        val minigame = this.config.minigame.create(MinigameCreationContext(server))
+        //TODO: should we support reloading and have a separate reset function?
+        val minigame = this.config.minigame.create(MinigameCreationContext.initial(server))
         minigame.tryInitialize()
         this.minigame = minigame
     }
@@ -111,7 +112,7 @@ class TwistsMinigameManager(
     }
 
     private fun createLobby(server: MinecraftServer): LobbyMinigame {
-        val lobby = LobbyMinigame.create(this.config.lobby, this::minigame, MinigameCreationContext(server))
+        val lobby = LobbyMinigame.create(this.config.lobby, this::minigame, MinigameCreationContext.initial(server))
         lobby.start()
         return lobby
     }

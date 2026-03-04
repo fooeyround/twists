@@ -5,7 +5,6 @@ import net.casual.arcade.dimensions.level.vanilla.VanillaDimension
 import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevels
 import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevelsBuilder
 import net.casual.arcade.utils.IdentifierUtils
-import net.casual.arcade.utils.set
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.gamerules.GameRules
 
@@ -13,7 +12,7 @@ import net.minecraft.world.level.gamerules.GameRules
 
 
 object LevelUtils {
-    fun createNewVanillaLikeLevels(server: MinecraftServer, seed: Long? = null, locatorBar: Boolean = false): VanillaLikeLevels {
+    fun createNewVanillaLikeLevels(server: MinecraftServer, seed: Long? = null, locatorBar: Boolean = false, immediateRespawn: Boolean = false): VanillaLikeLevels {
         return VanillaLikeLevelsBuilder.build(server) {
             for (dimension in listOf(VanillaDimension.Overworld, VanillaDimension.Nether, VanillaDimension.End)) {
                 this.set(dimension) {
@@ -24,8 +23,10 @@ object LevelUtils {
                         randomSeed()
                     }
                     gameRules {
-                        set(GameRules.LOCATOR_BAR, locatorBar)
+                        set(GameRules.IMMEDIATE_RESPAWN, immediateRespawn, server)
+                        set(GameRules.LOCATOR_BAR, locatorBar, server)
                     }
+                    //TODO: should there be an option to kept them?
                     persistence(LevelPersistence.Temporary)
                 }
             }

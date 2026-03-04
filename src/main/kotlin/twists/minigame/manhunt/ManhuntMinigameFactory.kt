@@ -11,12 +11,12 @@ import twists.util.LevelUtils
 
 class ManhuntMinigameFactory : MinigameFactory {
     override fun codec(): MapCodec<out MinigameFactory> {
-        return CODEC
+        return codec
     }
 
 
     override fun create(context: MinigameCreationContext): ManhuntMinigame {
-        val worlds = LevelUtils.createNewVanillaLikeLevels(context.server)
+        val worlds = LevelUtils.createNewVanillaLikeLevels(context.server, locatorBar = true)
         return ManhuntMinigame(
             context.server,
             context.uuid,
@@ -26,9 +26,9 @@ class ManhuntMinigameFactory : MinigameFactory {
     }
 
     companion object : CodecProvider<ManhuntMinigameFactory> {
-        override val ID: Identifier
-            get() = ManhuntMinigame.ID
-        override val CODEC: MapCodec<out ManhuntMinigameFactory>
+        override val id: Identifier
+            get() = ManhuntMinigame.id
+        override val codec: MapCodec<out ManhuntMinigameFactory>
             get() = MapCodec.unit(ManhuntMinigameFactory())
         val DEFAULT = ManhuntMinigameFactory()
     }

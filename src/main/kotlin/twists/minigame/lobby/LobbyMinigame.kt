@@ -13,9 +13,7 @@ import net.casual.arcade.minigame.data.MinigameDataModules
 import net.casual.arcade.minigame.data.MinigameDataModules.Companion.get
 import net.casual.arcade.minigame.data.module.MinigameWorldData
 import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
-import net.casual.arcade.minigame.events.MinigameAddPlayerEvent
 import net.casual.arcade.minigame.events.MinigameInitializeEvent
-import net.casual.arcade.minigame.events.MinigameSetPlayingEvent
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode.Companion.extendedGameMode
 import net.casual.arcade.minigame.managers.MinigameLevelManager
@@ -27,14 +25,15 @@ import net.casual.arcade.utils.*
 import net.casual.arcade.utils.TimeUtils.Seconds
 import net.casual.arcade.utils.coroutine.delay
 import net.casual.arcade.utils.coroutine.launch
+import net.casual.arcade.utils.entity.teleportTo
 import net.casual.arcade.utils.file.ReadableArchive
+import net.casual.arcade.utils.level.resetToDefault
 import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes
 import net.minecraft.world.level.gamerules.GameRules
@@ -63,7 +62,7 @@ class LobbyMinigame(
     val next by next
 
     init {
-        this.players.keepPlayerData = false
+        this.players.keepPlayerData = true
     }
 
     private var lobbyLevel: CustomLevel = CustomLevelBuilder.build(server) {
@@ -77,21 +76,21 @@ class LobbyMinigame(
         persistence(LevelPersistence.Temporary)
         viewDistance(20)
         gameRules {
-            resetToDefault()
-            set(GameRules.SPAWN_PHANTOMS, false)
-            set(GameRules.FIRE_SPREAD_RADIUS_AROUND_PLAYER, 0)
-            set(GameRules.SPAWN_MOBS, false)
-            set(GameRules.FALL_DAMAGE, false)
-            set(GameRules.DROWNING_DAMAGE, false)
-            set(GameRules.ENTITY_DROPS, false)
-            set(GameRules.ADVANCE_WEATHER, false)
-            set(GameRules.SPAWN_WANDERING_TRADERS, false)
-            set(GameRules.MOB_DROPS, false)
-            set(GameRules.BLOCK_DROPS, false)
-            set(GameRules.COMMAND_BLOCK_OUTPUT, false)
-            set(GameRules.MAX_SNOW_ACCUMULATION_HEIGHT, 0)
-            set(GameRules.RANDOM_TICK_SPEED, 0)
-            set(GameRules.LOCATOR_BAR, false)
+            resetToDefault(server)
+            set(GameRules.SPAWN_PHANTOMS, false, server)
+            set(GameRules.FIRE_SPREAD_RADIUS_AROUND_PLAYER, 0, server)
+            set(GameRules.SPAWN_MOBS, false, server)
+            set(GameRules.FALL_DAMAGE, false, server)
+            set(GameRules.DROWNING_DAMAGE, false, server)
+            set(GameRules.ENTITY_DROPS, false, server)
+            set(GameRules.ADVANCE_WEATHER, false, server)
+            set(GameRules.SPAWN_WANDERING_TRADERS, false, server)
+            set(GameRules.MOB_DROPS, false, server)
+            set(GameRules.BLOCK_DROPS, false, server)
+            set(GameRules.COMMAND_BLOCK_OUTPUT, false, server)
+            set(GameRules.MAX_SNOW_ACCUMULATION_HEIGHT, 0, server)
+            set(GameRules.RANDOM_TICK_SPEED, 0, server)
+            set(GameRules.LOCATOR_BAR, false, server)
         }
     }
 
@@ -132,8 +131,8 @@ class LobbyMinigame(
 
     @Listener
     private fun onMinigameAddPlayer(event: MinigameAddNewPlayerEvent) {
-        event.player.extendedGameMode = ExtendedGameMode.Adventure
         this.players.setPlaying(event.player)
+        event.player.extendedGameMode = ExtendedGameMode.Adventure
         TwistsUtils.logger.info("event.player: ${event.player}")
         this.teleport(event.player)
     }

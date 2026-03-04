@@ -5,29 +5,16 @@ import net.casual.arcade.dimensions.level.vanilla.VanillaDimension
 import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevels
 import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevelsBuilder
 import net.casual.arcade.dimensions.utils.deleteCustomLevel
-import net.casual.arcade.events.server.player.PlayerRespawnEvent
 import net.casual.arcade.minigame.Minigame
-import net.casual.arcade.minigame.annotation.Listener
-import net.casual.arcade.minigame.annotation.ListenerFlags
-import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
-import net.casual.arcade.minigame.events.MinigameCloseEvent
-import net.casual.arcade.minigame.events.MinigameSetPlayingEvent
 import net.casual.arcade.minigame.phase.Phase
 import net.casual.arcade.utils.IdentifierUtils
-import net.casual.arcade.utils.PlayerUtils.clearPlayerInventory
-import net.casual.arcade.utils.PlayerUtils.resetExperience
-import net.casual.arcade.utils.PlayerUtils.resetHealth
-import net.casual.arcade.utils.PlayerUtils.resetHunger
-import net.casual.arcade.utils.set
-import net.casual.arcade.utils.teleportTo
+import net.casual.arcade.utils.entity.teleportTo
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.level.GameType
 import net.minecraft.world.level.gamerules.GameRules
 import twists.extension.PlayerFallWithoutDamageExtension.Companion.takeNoDamageOnNextFall
-import twists.minigame.shared.TwistedMinigame
 import twists.minigame.shared.VanillaLikeLevelsSpawnLocation
 import twists.minigame.shared.VanillaLikeTwistedMinigame
+import twists.util.LevelUtils
 import twists.util.TwistsUtils
 import twists.util.twists
 import java.util.*
@@ -38,7 +25,7 @@ class WorldlessMinigame(
     private var dimensions: VanillaLikeLevels,
     private val factory: WorldlessMinigameFactory? = null
 ): VanillaLikeTwistedMinigame(server, uuid, dimensions) {
-    override val id = ID
+    override val id = WorldlessMinigame.id
     override val settings = WorldlessSettings(this)
     override fun phases(): Collection<Phase<out Minigame>> {
         return WorldlessPhase.entries
@@ -49,7 +36,7 @@ class WorldlessMinigame(
     }
 
     internal fun switchToNewWorld() {
-        val newDimensions = createNewVanillaLikeLevels(this.server)
+        val newDimensions = LevelUtils.createNewVanillaLikeLevels(this.server)
         this.levels.addAll(newDimensions.all())
 
         this.dimensions.all().forEach { this.server.deleteCustomLevel(it) }
@@ -80,8 +67,9 @@ class WorldlessMinigame(
     */
 
     companion object {
-        val ID = twists("worldless")
+        val id = twists("worldless")
 
+        @Deprecated("use LevelUtils")
         fun createNewVanillaLikeLevels(server: MinecraftServer, seed: Long? = null): VanillaLikeLevels {
             return VanillaLikeLevelsBuilder.build(server) {
                 for (dimension in listOf(VanillaDimension.Overworld, VanillaDimension.Nether, VanillaDimension.End)) {
@@ -95,7 +83,6 @@ class WorldlessMinigame(
                         gameRules {
                             set(GameRules.IMMEDIATE_RESPAWN, true, server)
                         }
-                        //TODO: should there be an option to kept them?
                         persistence(LevelPersistence.Temporary)
                     }
                 }

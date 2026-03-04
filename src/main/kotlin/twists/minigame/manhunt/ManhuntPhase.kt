@@ -1,11 +1,9 @@
 package twists.minigame.manhunt
 
 import net.casual.arcade.minigame.phase.Phase
-import net.casual.arcade.minigame.utils.MinigameUtils.launch
 import net.casual.arcade.scheduler.GlobalTickedScheduler
-import net.casual.arcade.utils.PlayerUtils.server
 import net.casual.arcade.utils.component.unitalicize
-import net.casual.arcade.utils.teleportTo
+import net.casual.arcade.utils.entity.teleportTo
 import net.minecraft.core.Holder
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
@@ -13,7 +11,6 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
-import net.minecraft.world.item.component.ResolvableProfile
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.level.GameType
 import twists.Twists

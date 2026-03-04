@@ -5,16 +5,16 @@ import net.casual.arcade.minigame.serialization.MinigameCreationContext
 import net.casual.arcade.minigame.serialization.MinigameFactory
 import net.casual.arcade.utils.serialization.codec.CodecProvider
 import net.minecraft.resources.Identifier
+import twists.util.LevelUtils
 
 
 class WorldlessMinigameFactory : MinigameFactory {
     override fun codec(): MapCodec<out MinigameFactory> {
-        return CODEC
+        return codec
     }
 
-
     override fun create(context: MinigameCreationContext): WorldlessMinigame {
-        val worldless = WorldlessMinigame.createNewVanillaLikeLevels(context.server)
+        val worldless = LevelUtils.createNewVanillaLikeLevels(context.server)
         return WorldlessMinigame(
             context.server,
             context.uuid,
@@ -24,12 +24,11 @@ class WorldlessMinigameFactory : MinigameFactory {
     }
 
     companion object : CodecProvider<WorldlessMinigameFactory> {
-        override val ID: Identifier
-            get() = WorldlessMinigame.ID
-        override val CODEC: MapCodec<out WorldlessMinigameFactory>
+        override val id: Identifier
+            get() = WorldlessMinigame.id
+        override val codec: MapCodec<out WorldlessMinigameFactory>
             get() = MapCodec.unit(WorldlessMinigameFactory())
     }
-
 
 }
 

@@ -4,9 +4,7 @@ package twists.minigame.manhunt
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import net.casual.arcade.commands.*
-import net.casual.arcade.utils.PlayerUtils.addToTeam
-import net.casual.arcade.utils.TeamUtils
-import net.casual.arcade.utils.chat.ChatFormatter
+import net.casual.arcade.utils.player.addToTeam
 import net.minecraft.ChatFormatting
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack

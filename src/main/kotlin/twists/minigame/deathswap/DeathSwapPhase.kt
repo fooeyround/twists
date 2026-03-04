@@ -7,8 +7,8 @@ import net.casual.arcade.minigame.task.impl.PhaseChangeTask
 import net.casual.arcade.scheduler.GlobalTickedScheduler
 import net.casual.arcade.utils.PlayerUtils.clearPlayerInventory
 import net.casual.arcade.utils.TimeUtils.Ticks
+import net.casual.arcade.utils.entity.teleportTo
 import net.casual.arcade.utils.math.location.LocationWithLevel.Companion.locationWithLevel
-import net.casual.arcade.utils.teleportTo
 import net.minecraft.world.level.GameType
 import twists.task.SwappingBossbarTask
 import twists.util.TwistsUtils
@@ -62,6 +62,7 @@ enum class DeathSwapPhase(override val id: String) : Phase<DeathSwapMinigame> {
             val map = minigame.players.playing.singleLeftShiftedDerangement() ?: return
             map.forEach { (p1, p2) ->
                 originalLocations[p1]?.let { p2.teleportTo(it) }
+                p2.fallDistance = 0.0
             }
 
             minigame.setPhase(Playing)

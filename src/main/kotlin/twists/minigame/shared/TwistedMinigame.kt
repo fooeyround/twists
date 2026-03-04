@@ -4,15 +4,13 @@ import net.casual.arcade.events.server.player.PlayerSetSneakingEvent
 import net.casual.arcade.minigame.Minigame
 import net.casual.arcade.minigame.annotation.Listener
 import net.casual.arcade.minigame.annotation.ListenerFlags
-import net.casual.arcade.minigame.events.MinigameAddPlayerEvent
 import net.casual.arcade.minigame.events.MinigameCloseEvent
 import net.casual.arcade.minigame.events.MinigameSetPlayingEvent
 import net.casual.arcade.minigame.events.MinigameSetSpectatingEvent
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode.Companion.extendedGameMode
-import net.casual.arcade.utils.PlayerUtils.revokeAllAdvancements
-import net.casual.arcade.utils.TeamUtils.asPlayerTeam
-import net.casual.arcade.utils.teleportTo
+import net.casual.arcade.utils.player.revokeAllAdvancements
+import net.casual.arcade.utils.entity.teleportTo
 import net.minecraft.server.MinecraftServer
 import twists.extension.SharedInventoryTeamExtension
 import twists.extension.SharedInventoryTeamExtension.Companion.sharedInventoryExtension
@@ -32,10 +30,9 @@ abstract class TwistedMinigame(
     }
 
     @Listener
-    private fun minigameAddPlayers(event: MinigameAddPlayerEvent) {
+    private fun twistedMinigameSetPlaying(event: MinigameSetPlayingEvent) {
+        //TODO: this should not be needed if `keepPlayerData = true`, but it is.
         event.player.revokeAllAdvancements()
-
-//        TwistsUtils.logger.info("TTT ${event.player}")
 
     }
 
@@ -81,8 +78,5 @@ abstract class TwistedMinigame(
             }
         }
     }
-
-
-
 
 }

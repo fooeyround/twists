@@ -5,11 +5,12 @@
   "mixins": [
     "MinecraftServerMixin",
     "feature.event.bedExplodeEvent.BedBlockMixin",
+    "feature.event.waypointTransmitterReceiveEvent.WaypointTransmitterMixin",
     "feature.soulbound.EntityEquipmentMixin",
     "feature.soulbound.InventoryMixin",
     "feature.soulbound.ServerPlayerMixin",
     "feature.twist.sharedInventory.InventoryMixin",
-    "feature.twist.sharedInventory.PlayerEquipmentMixin",
+    "feature.twist.sharedInventory.PlayerEquipmentMixin"
   ],
   "injectors": {
     "defaultRequire": 1

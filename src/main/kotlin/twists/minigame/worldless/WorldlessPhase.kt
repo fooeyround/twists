@@ -5,7 +5,7 @@ import net.casual.arcade.minigame.task.impl.BossbarTask.Companion.then
 import net.casual.arcade.minigame.task.impl.BossbarTask.Companion.withDuration
 import net.casual.arcade.minigame.task.impl.PhaseChangeTask
 import net.casual.arcade.utils.TimeUtils.Ticks
-import net.casual.arcade.utils.teleportTo
+import net.casual.arcade.utils.entity.teleportTo
 import twists.task.SwappingBossbarTask
 
 internal const val INITIALIZATION_ID = "initialization"

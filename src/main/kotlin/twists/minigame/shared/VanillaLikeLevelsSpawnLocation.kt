@@ -2,7 +2,7 @@ package twists.minigame.shared
 
 import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevels
 import net.casual.arcade.minigame.managers.MinigameLevelManager
-import net.casual.arcade.utils.PlayerUtils.server
+import net.casual.arcade.utils.player.server
 import net.casual.arcade.utils.math.location.LocationWithLevel
 import net.casual.arcade.utils.math.location.LocationWithLevel.Companion.asLocation
 import net.minecraft.server.level.ServerLevel

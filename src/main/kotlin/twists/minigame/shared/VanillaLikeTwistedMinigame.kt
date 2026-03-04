@@ -9,9 +9,10 @@ import net.casual.arcade.minigame.events.MinigameCloseEvent
 import net.casual.arcade.minigame.events.MinigameSetPlayingEvent
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode.Companion.extendedGameMode
-import net.casual.arcade.utils.PlayerUtils.resetExperience
-import net.casual.arcade.utils.PlayerUtils.resetHunger
-import net.casual.arcade.utils.teleportTo
+import net.casual.arcade.utils.player.resetExperience
+import net.casual.arcade.utils.player.resetHunger
+import net.casual.arcade.utils.player.revokeAllAdvancements
+import net.casual.arcade.utils.entity.teleportTo
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.GameType
@@ -57,6 +58,7 @@ abstract class VanillaLikeTwistedMinigame(
 
         player.resetHunger()
         player.resetExperience()
+        player.revokeAllAdvancements()
 //        player.clearPlayerInventory()
         player.removeAllEffects()
 

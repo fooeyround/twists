@@ -1,8 +1,7 @@
 package twists.item
 
 import eu.pb4.polymer.core.api.item.PolymerItem
-import net.casual.arcade.utils.PlayerUtils.username
-import net.casual.arcade.utils.uuid
+import net.casual.arcade.utils.player.username
 import net.minecraft.ChatFormatting
 import net.minecraft.core.GlobalPos
 import net.minecraft.core.component.DataComponents
