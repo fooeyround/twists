@@ -18,7 +18,7 @@ import twists.event.BedExplodeEvent;
 public class BedBlockMixin {
 
     @ModifyExpressionValue(method = "useWithoutItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/attribute/BedRule;explodes()Z"))
-    private boolean it(boolean original, @Local BedRule bedRule,
+    private boolean it(boolean original, @Local(name = "bedRule") BedRule bedRule,
                        @Local(argsOnly = true) BlockState state,
                        @Local(argsOnly = true) Level level,
                        @Local(argsOnly = true) BlockPos pos,

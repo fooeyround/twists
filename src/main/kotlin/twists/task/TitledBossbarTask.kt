@@ -14,7 +14,7 @@ import net.minecraft.world.level.storage.ValueOutput
 import twists.ui.SwappingBossbar
 import twists.util.twists
 
-class SwappingBossbarTask(
+class TitledBossbarTask(
     minigame: Minigame,
     val title: Component,
 ): BossbarTask<SwappingBossbar>(minigame, SwappingBossbar(title)), SavableTask {
@@ -28,7 +28,7 @@ class SwappingBossbarTask(
         override val id = twists("titled_boss_bar_task")
 
         override fun create(input: ValueInput, context: MinigameTaskCreationContext<Minigame>): RichResult<Task> {
-            return RichResult.success(SwappingBossbarTask(context.minigame, Component.literal("TOODFIXTHIS")).readData(input, context))
+            return RichResult.success(TitledBossbarTask(context.minigame, Component.literal("TOODFIXTHIS")).readData(input, context))
         }
     }
 }

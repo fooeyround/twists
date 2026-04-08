@@ -16,7 +16,7 @@ import net.minecraft.network.chat.Component
 import twists.minigame.lobby.LobbyMinigame
 import twists.minigame.lobby.LobbyPhase
 
-class LobbyCommand(val lobby: LobbyMinigame) : CommandTree {
+class LobbyCommand(val lobby: LobbyMinigame) : CommandTree<CommandSourceStack> {
     override fun create(buildContext: CommandBuildContext): LiteralArgumentBuilder<CommandSourceStack> {
         return CommandTree.buildLiteral("lobby") {
             requiresAdminOrPermission()

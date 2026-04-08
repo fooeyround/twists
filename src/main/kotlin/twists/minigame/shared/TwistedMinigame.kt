@@ -11,16 +11,19 @@ import net.casual.arcade.minigame.events.MinigameSetSpectatingEvent
 import net.casual.arcade.minigame.events.MinigameStartEvent
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode.Companion.extendedGameMode
-import net.casual.arcade.utils.TimeUtils.Days
-import net.casual.arcade.utils.TimeUtils.Seconds
+import net.casual.arcade.minigame.task.impl.BossbarTask.Companion.then
+import net.casual.arcade.minigame.task.impl.BossbarTask.Companion.withDuration
+import net.casual.arcade.utils.TimeUtils.Ticks
 import net.casual.arcade.utils.entity.teleportTo
 import net.casual.arcade.utils.player.revokeAllAdvancements
+import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.item.ItemStack
 import twists.extension.SharedInventoryTeamExtension
 import twists.extension.SharedInventoryTeamExtension.Companion.sharedInventoryExtension
 import twists.stats.TwistsStats
 import twists.task.RecurringMinigameTask
+import twists.task.TitledBossbarTask
 import twists.util.ItemUtils
 import twists.util.TwistsUtils
 import java.util.*
@@ -61,18 +64,23 @@ abstract class TwistedMinigame(
     @Listener
     private fun itemsEveryMinuteTwist(event: MinigameStartEvent) {
         val (minigame) = event
-        if (minigame.settings.randomItemOnInterval) {
-            val task = RecurringMinigameTask(minigame, 10.Seconds) {
-                minigame.players.playing.forEach {
-                    val item = ItemUtils.randomItem(it.random)
-                    if (item != null) {
-                        it.inventory.add(ItemStack(item))
-                    } else {
-                        TwistsUtils.logger.error("Could not give player random item!")
+        if (minigame is TwistedMinigame && minigame.settings.randomItemOnInterval != 0.Ticks) {
+            val recurringTask = RecurringMinigameTask(minigame,  minigame.settings.randomItemOnInterval, {
+                val task = TitledBossbarTask(minigame, Component.literal("New Item"))
+                    .withDuration(minigame.settings.randomItemOnInterval - 1.Ticks).then {
+                        minigame.players.playing.forEach {
+                            val item = ItemUtils.randomItem(it.random)
+                            if (item != null) {
+                                it.inventory.add(ItemStack(item))
+                            } else {
+                                TwistsUtils.logger.error("Could not give player random item!")
+                            }
+                        }
                     }
-                }
-            }
-            minigame.scheduler.schedule(10.Seconds, task)
+                minigame.scheduler.schedule( minigame.settings.randomItemOnInterval, task)
+            })
+
+            minigame.scheduler.schedule( minigame.settings.randomItemOnInterval, recurringTask)
         }
 
     }

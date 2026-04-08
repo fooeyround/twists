@@ -2,6 +2,7 @@ package twists.task
 
 import net.casual.arcade.minigame.Minigame
 import net.casual.arcade.scheduler.task.Task
+import net.casual.arcade.utils.TimeUtils.Ticks
 import net.casual.arcade.utils.time.MinecraftTimeDuration
 
 /**
@@ -18,7 +19,7 @@ class RecurringMinigameTask(
 ): Task {
     override fun run() {
         if (!minigame.closed) {
-            task.run()
+            minigame.scheduler.schedule(0.Ticks, task)
             minigame.scheduler.schedule(interval, this)
         }
     }

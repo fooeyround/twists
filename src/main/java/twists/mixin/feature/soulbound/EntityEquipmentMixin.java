@@ -15,6 +15,7 @@ import twists.util.TwistsUtils;
 @Mixin(EntityEquipment.class)
 public class EntityEquipmentMixin {
 
+    @SuppressWarnings("WrapWithConditionTargetsNonVoid")
     @WrapWithCondition(method = "dropAll", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;"))
     private static boolean twists$soulbound$entityEquipmentKeepSoulbound(LivingEntity entity, ItemStack stack, boolean randomizeMotion, boolean includeThrower) {
         if (entity instanceof Player) {

@@ -11,7 +11,7 @@ import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.arguments.EntityArgument
 import net.minecraft.network.chat.Component
 
-internal object TeamCommandModifier : CommandTree {
+internal object TeamCommandModifier : CommandTree<CommandSourceStack> {
     override fun create(buildContext: CommandBuildContext): LiteralArgumentBuilder<CommandSourceStack> {
         return CommandTree.buildLiteral("team") {
             literal("manhunt") {

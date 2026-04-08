@@ -13,7 +13,6 @@ plugins {
 version = project.version
 
 repositories {
-
     mavenLocal()
     maven("https://maven.supersanta.me/snapshots")
     maven("https://maven.maxhenkel.de/repository/public")
@@ -27,18 +26,16 @@ repositories {
 
 dependencies {
     minecraft(libs.minecraft)
-    @Suppress("UnstableApiUsage")
-    mappings(loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${libs.versions.parchment.get()}@zip")
-    })
-    modImplementation(libs.fabric.loader)
-    modImplementation(libs.fabric.api)
 
-    includeModImplementation(libs.fabric.kotlin)
+    implementation(libs.fabric.loader)
 
-    includeModImplementation(libs.arcade)
-    modImplementation(libs.polymer)
+    //TODO allow disabling such a fat jar
+    includeImplementation(libs.fabric.kotlin)
+    includeImplementation(libs.arcade)
+    //Transitive of arcade..., should this be explicit includeImplementation?
+    implementation(libs.polymer)
+
+    implementation(libs.fabric.api)
 
 }
 
@@ -47,18 +44,11 @@ java {
 }
 
 loom {
-    runs {
-        create("datagenClient") {
-            client()
-            programArgs("--arcade-datagen")
-            runDir = "run-datagen"
-        }
-    }
     runConfigs.configureEach {
-        //TODO: how to do in kotlin
-//        ideConfigGenerated = true
-//        vmArgs '-Dmixin.debug.export=true -DCOMMAND_STACK_TRACES=true'
+        ideConfigGenerated(true)
+        vmArgs("-Dmixin.debug.export=true -DCOMMAND_STACK_TRACES=true -DMC_DEBUG_ENABLED=true -DMC_DEBUG_COMMAND_STACK_TRACES=true -DMC_DEBUG_VERBOSE_COMMAND_ERRORS=true")
     }
+    accessWidenerPath.set(file("src/main/resources/twists.accesswidener"))
 }
 
 tasks {
@@ -83,11 +73,6 @@ tasks {
 
 
 
-
-private fun DependencyHandler.includeModImplementation(dependencyNotation: Any) {
-    include(dependencyNotation)
-    modImplementation(dependencyNotation)
-}
 
 private fun DependencyHandler.includeImplementation(dependencyNotation: Any) {
     include(dependencyNotation)

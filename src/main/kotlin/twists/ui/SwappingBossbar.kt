@@ -7,9 +7,11 @@ import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.BossEvent
 
-class SwappingBossbar: TimerBossbar() {
+class SwappingBossbar(
+    val title: Component
+): TimerBossbar() {
     override fun getTitle(player: ServerPlayer): Component {
-        return Component.literal("Swap in ${this.getRemainingDuration().formatMMSS()}")
+        return Component.literal("").append(title).append(" in ").append(this.getRemainingDuration().formatMMSS())
     }
 
     override fun getProgress(player: ServerPlayer): Float {

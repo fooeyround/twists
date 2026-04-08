@@ -8,6 +8,7 @@ import net.casual.arcade.minigame.settings.display.MenuGameSettingBuilder.Compan
 import net.casual.arcade.utils.ItemUtils
 import net.casual.arcade.utils.ItemUtils.named
 import net.casual.arcade.utils.TimeUtils.Minutes
+import net.casual.arcade.utils.TimeUtils.Seconds
 import net.casual.arcade.utils.TimeUtils.Ticks
 import net.minecraft.world.item.Items
 import twists.extension.SharedInventoryTeamExtension
@@ -45,9 +46,12 @@ open class TwistSettings(
 
     var randomItemOnInterval by this.register(time {
         name = "random_items_on_interval"
-        display = Items.BUNDLE.named("Communal Pockets")
+        display = Items.RED_CANDLE.named("Random Items On Interval")
         value = 0.Ticks
         option("disabled", Items.BARRIER.named("Disabled"), 0.Ticks)
+        for (i in intArrayOf(10, 30, 45)) {
+            option("${i}_sec", ItemUtils.light(min(i, 15)).named("$i sec"), i.Seconds)
+        }
         for (i in 1..20) {
             option("${i}_min", ItemUtils.light(min(i, 15)).named("$i min"), i.Minutes)
         }

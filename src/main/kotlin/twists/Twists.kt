@@ -24,13 +24,15 @@ import twists.minigame.deathswap.DeathSwapMinigameFactory
 import twists.minigame.lobby.LobbyData
 import twists.minigame.manhunt.ManhuntMinigameFactory
 import twists.minigame.manhunt.TeamCommandModifier
-import twists.minigame.skyblock.SkyBlockMinigameFactory
+import twists.minigame.collective_survival.CollectiveSurvivalMinigameFactory
+import twists.minigame.manhunt.TrackCommand
 import twists.minigame.worldless.WorldlessMinigameFactory
 import twists.stats.TwistsStats
-import twists.task.SwappingBossbarTask
+import twists.task.TitledBossbarTask
 import twists.util.ItemUtils
 import twists.util.TwistsUtils
 import twists.util.twists
+
 
 object Twists: DedicatedServerModInitializer {
 
@@ -59,8 +61,8 @@ object Twists: DedicatedServerModInitializer {
         WorldlessMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
         ManhuntMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
         DeathSwapMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
-        SkyBlockMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
-        Registry.register(TaskRegistries.TASK_FACTORY, SwappingBossbarTask.id, SwappingBossbarTask)
+        CollectiveSurvivalMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
+        Registry.register(TaskRegistries.TASK_FACTORY, TitledBossbarTask.id, TitledBossbarTask)
 
 
         this.minigames.registerEvents(GlobalEventHandler.Server)
@@ -70,7 +72,7 @@ object Twists: DedicatedServerModInitializer {
         }
 
         GlobalEventHandler.Server.register<ServerRegisterCommandEvent> { event ->
-            event.register(TeamCommandModifier, TwistsCommand)
+            event.register(TeamCommandModifier, TrackCommand, TwistsCommand)
         }
 
         TwistsUtils.logger.info("${TwistsUtils.MOD_ID} loaded!")

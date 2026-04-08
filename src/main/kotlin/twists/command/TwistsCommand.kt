@@ -9,7 +9,7 @@ import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import twists.Twists
 
-object TwistsCommand : CommandTree {
+object TwistsCommand : CommandTree<CommandSourceStack> {
     override fun create(buildContext: CommandBuildContext): LiteralArgumentBuilder<CommandSourceStack> {
         return CommandTree.buildLiteral("twists") {
             literal("reload") {

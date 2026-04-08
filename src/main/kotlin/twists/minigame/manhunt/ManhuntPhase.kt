@@ -25,9 +25,6 @@ enum class ManhuntPhase(override val id: String) : Phase<ManhuntMinigame> {
             minigame.settings.canPvp.set(true)
             minigame.settings.canBreakBlocks.set(true)
 
-
-            minigame.overworld.dayTime = 0
-            minigame.overworld.getChunk(0, 0)
             minigame.players.forEach {
                 it.teleportTo(minigame.levels.spawn.get(it)!!)
             }

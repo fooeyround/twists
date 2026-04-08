@@ -18,12 +18,12 @@ class ManhuntMinigameFactory(val seed: Long?) : MinigameFactory {
 
 
     override fun create(context: MinigameCreationContext): ManhuntMinigame {
-        val worlds = LevelUtils.createNewVanillaLikeLevels(context.server, locatorBar = true, seed = seed)
-        return ManhuntMinigame(
+        val minigame = ManhuntMinigame(
             context.server,
             context.uuid,
-            worlds
         )
+        minigame.levelSettings?.seed = seed
+        return minigame
 
     }
 

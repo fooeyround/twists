@@ -25,4 +25,10 @@ class ManhuntSettings(
         defaults.options(this)
     })
 
+    var hardcoreHunters by this.register(bool {
+        name = "hardcore_hunters"
+        display = Items.TOTEM_OF_UNDYING.named("Hardcore Hunters")
+        value = false
+        defaults.options(this)
+    })
 }

@@ -8,6 +8,7 @@ import net.casual.arcade.minigame.annotation.Listener
 import net.casual.arcade.minigame.annotation.ListenerFlags
 import net.casual.arcade.minigame.events.MinigameSetPlayingEvent
 import net.casual.arcade.minigame.phase.Phase
+import net.casual.arcade.minigame.utils.MinigameUtils.getMinigame
 import net.minecraft.server.MinecraftServer
 import twists.event.BedExplodeEvent
 import twists.event.WaypointTransmitterReceiveEvent
@@ -20,9 +21,7 @@ import java.util.*
 class ManhuntMinigame(
     server: MinecraftServer,
     uuid: UUID,
-    dimensions: VanillaLikeLevels,
-    private val factory: ManhuntMinigameFactory? = null
-): VanillaLikeTwistedMinigame(server, uuid, dimensions) {
+): VanillaLikeTwistedMinigame(server, uuid) {
     override val id = ManhuntMinigame.id
     override val settings = ManhuntSettings(this)
 
@@ -37,7 +36,7 @@ class ManhuntMinigame(
 
     @Listener(flags = ListenerFlags.IS_PLAYING, phase = BuiltInEventPhases.POST)
     private fun onPlayerDeath(event: PlayerDeathEvent) {
-        if (event.player.team?.name == "runners") {
+        if (event.player.team?.name == "runners" || this.settings.hardcoreHunters) {
             this.players.setSpectating(event.player)
         }
     }

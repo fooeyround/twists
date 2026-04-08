@@ -1,6 +1,5 @@
 package twists.minigame.deathswap
 
-import net.casual.arcade.dimensions.level.vanilla.VanillaLikeLevels
 import net.casual.arcade.events.BuiltInEventPhases
 import net.casual.arcade.events.server.player.PlayerDeathEvent
 import net.casual.arcade.minigame.Minigame
@@ -15,9 +14,7 @@ import java.util.*
 class DeathSwapMinigame(
     server: MinecraftServer,
     uuid: UUID,
-    dimensions: VanillaLikeLevels,
-    private val factory: DeathSwapMinigameFactory? = null
-): VanillaLikeTwistedMinigame(server, uuid, dimensions) {
+): VanillaLikeTwistedMinigame(server, uuid) {
     override val id = ID
     override val settings = DeathSwapSettings(this)
 

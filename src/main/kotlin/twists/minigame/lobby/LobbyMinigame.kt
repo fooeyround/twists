@@ -12,7 +12,6 @@ import net.casual.arcade.minigame.area.BoxedArea
 import net.casual.arcade.minigame.data.MinigameDataModules
 import net.casual.arcade.minigame.data.MinigameDataModules.Companion.get
 import net.casual.arcade.minigame.data.module.MinigameWorldData
-import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
 import net.casual.arcade.minigame.events.MinigameAddPlayerEvent
 import net.casual.arcade.minigame.events.MinigameInitializeEvent
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode
@@ -22,13 +21,14 @@ import net.casual.arcade.minigame.phase.Phase
 import net.casual.arcade.minigame.serialization.MinigameCreationContext
 import net.casual.arcade.minigame.utils.MinigameUtils.transferAdminAndSpectatorTeamsTo
 import net.casual.arcade.scheduler.utils.asCoroutineDispatcher
-import net.casual.arcade.utils.*
+import net.casual.arcade.utils.IdentifierUtils
 import net.casual.arcade.utils.TimeUtils.Seconds
 import net.casual.arcade.utils.coroutine.delay
 import net.casual.arcade.utils.coroutine.launch
 import net.casual.arcade.utils.entity.teleportTo
 import net.casual.arcade.utils.file.ReadableArchive
 import net.casual.arcade.utils.level.resetToDefault
+import net.casual.arcade.utils.toKey
 import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.Identifier
@@ -117,7 +117,6 @@ class LobbyMinigame(
         this.settings.canTakeDamage.set(false)
         this.settings.canAttackEntities.set(true)
         this.settings.canInteractAll = false
-        this.settings.daylightCycle = 0
 
         if (this.modules.get<MinigameWorldData>() == null) {
             BoxedArea(Vec3i(0, -1, 0), 10, 3, this.lobbyLevel).place()

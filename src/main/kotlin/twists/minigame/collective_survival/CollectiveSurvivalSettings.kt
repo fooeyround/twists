@@ -11,7 +11,7 @@ import net.minecraft.world.item.Items
 import kotlin.math.min
 
 
-class SkyBlockSettings(
+class CollectiveSurvivalSettings(
     minigame: CollectiveSurvivalMinigame,
     defaults: DisplayableSettingsDefaults = DisplayableSettingsDefaults()
 ): TwistSettings(minigame, defaults) {

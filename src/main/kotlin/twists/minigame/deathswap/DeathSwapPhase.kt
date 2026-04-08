@@ -9,8 +9,9 @@ import net.casual.arcade.utils.player.clearPlayerInventory
 import net.casual.arcade.utils.TimeUtils.Ticks
 import net.casual.arcade.utils.entity.teleportTo
 import net.casual.arcade.utils.math.location.LocationWithLevel.Companion.locationWithLevel
+import net.minecraft.network.chat.Component
 import net.minecraft.world.level.GameType
-import twists.task.SwappingBossbarTask
+import twists.task.TitledBossbarTask
 import twists.util.TwistsUtils
 import twists.util.TwistsUtils.singleLeftShiftedDerangement
 
@@ -25,9 +26,6 @@ enum class DeathSwapPhase(override val id: String) : Phase<DeathSwapMinigame> {
             minigame.settings.canBreakBlocks.set(true)
             minigame.settings.tickFreezeOnPause.set(true)
 
-
-            minigame.overworld.dayTime = 1000
-            minigame.overworld.getChunk(0, 0)
             minigame.players.forEach {
                 it.teleportTo(minigame.levels.spawn.get(it)!!)
                 //TODO: this should be unneeded
@@ -45,7 +43,7 @@ enum class DeathSwapPhase(override val id: String) : Phase<DeathSwapMinigame> {
     },
     Playing(PLAYING_ID) {
         override fun start(minigame: DeathSwapMinigame, previous: Phase<DeathSwapMinigame>) {
-            val task = SwappingBossbarTask(minigame)
+            val task = TitledBossbarTask(minigame, Component.literal("Swapping"))
                 .withDuration(minigame.settings.deathSwapCooldown - 1.Ticks)
                 .then(PhaseChangeTask(minigame, Swapping))
             minigame.scheduler.schedulePhasedCancellable(minigame.settings.deathSwapCooldown, task).runIfCancelled()

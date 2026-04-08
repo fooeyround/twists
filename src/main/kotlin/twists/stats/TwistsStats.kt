@@ -14,10 +14,9 @@ object TwistsStats {
 
     internal fun load() {}
 
-    @Suppress("UNCHECKED_CAST")
+    @Suppress("SameParameterValue")
     private fun <T: Any> register(name: String, type: StatType<T>): Holder.Reference<StatType<T>> {
         return Registry.registerForHolder(MinigameRegistries.STAT_TYPES, twists(name), type)
-                as Holder.Reference<StatType<T>>
     }
 
 }

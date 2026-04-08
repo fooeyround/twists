@@ -14,11 +14,9 @@ class WorldlessMinigameFactory : MinigameFactory {
     }
 
     override fun create(context: MinigameCreationContext): WorldlessMinigame {
-        val worldless = LevelUtils.createNewVanillaLikeLevels(context.server)
         return WorldlessMinigame(
             context.server,
             context.uuid,
-            worldless
         )
 
     }

@@ -7,6 +7,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.PlayerTeam;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import twists.extension.SharedInventoryTeamExtension;
@@ -25,7 +26,7 @@ public class InventoryMixin {
                     "isEmpty", "getItem", "dropAll", "clearContent", "fillStackedContents",
 
             },
-            at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/player/Inventory;items:Lnet/minecraft/core/NonNullList;")
+            at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/player/Inventory;items:Lnet/minecraft/core/NonNullList;", opcode = Opcodes.GETFIELD)
     )
     private NonNullList<ItemStack> twists$sharedInventories$teamInventoryItemsRedirect(NonNullList<ItemStack> original) {
         if (((Inventory)(Object)(this)).player.getTeam() instanceof PlayerTeam team) {

@@ -2,8 +2,10 @@ package twists.item
 
 import eu.pb4.polymer.core.api.item.PolymerItem
 import net.casual.arcade.utils.player.username
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext
 import net.minecraft.ChatFormatting
 import net.minecraft.core.GlobalPos
+import net.minecraft.core.HolderLookup
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
@@ -21,7 +23,6 @@ import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.component.LodestoneTracker
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
-import xyz.nucleoid.packettweaker.PacketContext
 import java.util.*
 
 class TrackingCompassItem(properties: Properties) : Item(properties), PolymerItem {
@@ -35,9 +36,10 @@ class TrackingCompassItem(properties: Properties) : Item(properties), PolymerIte
     override fun getPolymerItemStack(
         itemStack: ItemStack,
         tooltipType: TooltipFlag,
-        context: PacketContext
+        context: PacketContext,
+        lookup: HolderLookup.Provider
     ): ItemStack {
-        val stack = super.getPolymerItemStack(itemStack, tooltipType, context)
+        val stack = super.getPolymerItemStack(itemStack, tooltipType, context, lookup)
         if (itemStack.get(DataComponents.LODESTONE_TRACKER) != null) {
             stack.set(DataComponents.LODESTONE_TRACKER, itemStack.get(DataComponents.LODESTONE_TRACKER))
         } else {
@@ -47,7 +49,7 @@ class TrackingCompassItem(properties: Properties) : Item(properties), PolymerIte
         return stack
     }
 
-    override fun getPolymerItemModel(stack: ItemStack?, context: PacketContext?): Identifier? {
+    override fun getPolymerItemModel(stack: ItemStack?, context: PacketContext?, lookup: HolderLookup.Provider): Identifier? {
         return null
     }
 

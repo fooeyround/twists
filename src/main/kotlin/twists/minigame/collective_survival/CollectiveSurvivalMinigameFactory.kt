@@ -7,11 +7,10 @@ import net.casual.arcade.utils.serialization.codec.CodecProvider
 import net.minecraft.resources.Identifier
 
 
-class SkyBlockMinigameFactory : MinigameFactory {
+class CollectiveSurvivalMinigameFactory : MinigameFactory {
     override fun codec(): MapCodec<out MinigameFactory> {
         return codec
     }
-
 
     override fun create(context: MinigameCreationContext): CollectiveSurvivalMinigame {
         return CollectiveSurvivalMinigame(
@@ -21,11 +20,11 @@ class SkyBlockMinigameFactory : MinigameFactory {
 
     }
 
-    companion object : CodecProvider<SkyBlockMinigameFactory> {
+    companion object : CodecProvider<CollectiveSurvivalMinigameFactory> {
         override val id: Identifier
             get() = CollectiveSurvivalMinigame.ID
-        override val codec: MapCodec<out SkyBlockMinigameFactory>
-            get() = MapCodec.unit(SkyBlockMinigameFactory())
+        override val codec: MapCodec<out CollectiveSurvivalMinigameFactory>
+            get() = MapCodec.unit(CollectiveSurvivalMinigameFactory())
     }
 
 

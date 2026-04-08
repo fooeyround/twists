@@ -13,13 +13,10 @@ class DeathSwapMinigameFactory : MinigameFactory {
         return codec
     }
 
-
     override fun create(context: MinigameCreationContext): DeathSwapMinigame {
-        val worlds = LevelUtils.createNewVanillaLikeLevels(context.server)
         return DeathSwapMinigame(
             context.server,
             context.uuid,
-            worlds
         )
 
     }
@@ -30,7 +27,6 @@ class DeathSwapMinigameFactory : MinigameFactory {
         override val codec: MapCodec<out DeathSwapMinigameFactory>
             get() = MapCodec.unit(DeathSwapMinigameFactory())
     }
-
 
 }
 
