@@ -13,6 +13,7 @@ import net.casual.arcade.minigame.data.MinigameDataModules
 import net.casual.arcade.minigame.data.MinigameDataModules.Companion.get
 import net.casual.arcade.minigame.data.module.MinigameWorldData
 import net.casual.arcade.minigame.events.MinigameAddNewPlayerEvent
+import net.casual.arcade.minigame.events.MinigameAddPlayerEvent
 import net.casual.arcade.minigame.events.MinigameInitializeEvent
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode
 import net.casual.arcade.minigame.gamemode.ExtendedGameMode.Companion.extendedGameMode
@@ -130,7 +131,7 @@ class LobbyMinigame(
 
 
     @Listener
-    private fun onMinigameAddPlayer(event: MinigameAddNewPlayerEvent) {
+    private fun onMinigameAddPlayer(event: MinigameAddPlayerEvent) {
         this.players.setPlaying(event.player)
         event.player.extendedGameMode = ExtendedGameMode.Adventure
         TwistsUtils.logger.info("event.player: ${event.player}")

@@ -6,10 +6,13 @@ import net.casual.arcade.events.server.player.PlayerDeathEvent
 import net.casual.arcade.minigame.Minigame
 import net.casual.arcade.minigame.annotation.Listener
 import net.casual.arcade.minigame.annotation.ListenerFlags
+import net.casual.arcade.minigame.events.MinigameSetPlayingEvent
 import net.casual.arcade.minigame.phase.Phase
 import net.minecraft.server.MinecraftServer
 import twists.event.BedExplodeEvent
 import twists.event.WaypointTransmitterReceiveEvent
+import twists.extension.SharedInventoryTeamExtension
+import twists.extension.SharedInventoryTeamExtension.Companion.sharedInventoryExtension
 import twists.minigame.shared.VanillaLikeTwistedMinigame
 import twists.util.twists
 import java.util.*
@@ -50,6 +53,19 @@ class ManhuntMinigame(
             event.cancel()
         }
     }
+
+    //TODO: this jankily overrides Twisted minigame...
+    @Listener(phase = BuiltInEventPhases.POST)
+    private fun communalPocketsOnSetPlaying(event: MinigameSetPlayingEvent) {
+        event.player.team?.let {
+            it.sharedInventoryExtension.shareLevel = if (!this.settings.communalPocketsRunnersOnly || event.player.team?.name == "runners") {
+                this.settings.communalPockets
+            } else {
+                SharedInventoryTeamExtension.ShareLevel.None
+            }
+        }
+    }
+
 
 
 

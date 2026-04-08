@@ -24,10 +24,11 @@ import twists.minigame.deathswap.DeathSwapMinigameFactory
 import twists.minigame.lobby.LobbyData
 import twists.minigame.manhunt.ManhuntMinigameFactory
 import twists.minigame.manhunt.TeamCommandModifier
+import twists.minigame.skyblock.SkyBlockMinigameFactory
 import twists.minigame.worldless.WorldlessMinigameFactory
 import twists.stats.TwistsStats
 import twists.task.SwappingBossbarTask
-import twists.util.ItemUtil
+import twists.util.ItemUtils
 import twists.util.TwistsUtils
 import twists.util.twists
 
@@ -40,7 +41,7 @@ object Twists: DedicatedServerModInitializer {
         Registries.ENCHANTMENT,
         twists("soulbound")
     )
-    val TRACKING_COMPASS =  ItemUtil.registerItem("tracking_compass", ::TrackingCompassItem)
+    val TRACKING_COMPASS =  ItemUtils.registerItem("tracking_compass", ::TrackingCompassItem)
 
     fun reload(server: MinecraftServer) {
         this.minigames.reload(server)
@@ -58,6 +59,7 @@ object Twists: DedicatedServerModInitializer {
         WorldlessMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
         ManhuntMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
         DeathSwapMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
+        SkyBlockMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
         Registry.register(TaskRegistries.TASK_FACTORY, SwappingBossbarTask.id, SwappingBossbarTask)
 
 

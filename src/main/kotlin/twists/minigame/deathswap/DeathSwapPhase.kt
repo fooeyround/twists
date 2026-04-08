@@ -5,7 +5,7 @@ import net.casual.arcade.minigame.task.impl.BossbarTask.Companion.then
 import net.casual.arcade.minigame.task.impl.BossbarTask.Companion.withDuration
 import net.casual.arcade.minigame.task.impl.PhaseChangeTask
 import net.casual.arcade.scheduler.GlobalTickedScheduler
-import net.casual.arcade.utils.PlayerUtils.clearPlayerInventory
+import net.casual.arcade.utils.player.clearPlayerInventory
 import net.casual.arcade.utils.TimeUtils.Ticks
 import net.casual.arcade.utils.entity.teleportTo
 import net.casual.arcade.utils.math.location.LocationWithLevel.Companion.locationWithLevel
@@ -30,6 +30,7 @@ enum class DeathSwapPhase(override val id: String) : Phase<DeathSwapMinigame> {
             minigame.overworld.getChunk(0, 0)
             minigame.players.forEach {
                 it.teleportTo(minigame.levels.spawn.get(it)!!)
+                //TODO: this should be unneeded
                 it.clearPlayerInventory()
             }
 

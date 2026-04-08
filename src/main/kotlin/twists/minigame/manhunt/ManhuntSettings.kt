@@ -13,8 +13,15 @@ class ManhuntSettings(
 
     var intentionalGameDesign by this.register(bool {
         name = "intentional_game_design"
-        display = Items.WIND_CHARGE.named("Enable Intentional Game Design")
+        display = Items.RED_BED.named("Intentional Game Design")
         value = true
+        defaults.options(this)
+    })
+
+    var communalPocketsRunnersOnly by this.register(bool {
+        name = "communal_pockets_runners_only"
+        display = Items.RABBIT_FOOT.named("Communal Pockets only applies to the runner")
+        value = false
         defaults.options(this)
     })
 

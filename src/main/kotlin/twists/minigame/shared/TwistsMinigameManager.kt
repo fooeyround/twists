@@ -57,10 +57,10 @@ class TwistsMinigameManager(
         return this.current == this.lobby
     }
 
-    fun returnToLobby() {
-        if (this.current != this.lobby) {
-            this.current.players.transferTo(this.lobby)
-            this.current.close()
+    fun returnToLobby(minigame: Minigame) {
+        if (minigame != this.lobby) {
+            minigame.players.transferTo(this.lobby)
+            minigame.close()
 
             GlobalTickedScheduler.later {
                 this.reloadMinigame(this.lobby.server)
@@ -127,7 +127,7 @@ class TwistsMinigameManager(
 
     private fun onMinigameInitialize(event: MinigameInitializeEvent) {
         event.minigame.events.register<MinigameCloseEvent> {
-            this.returnToLobby()
+            this.returnToLobby(it.minigame)
         }
     }
 

@@ -8,14 +8,16 @@ import net.casual.arcade.scheduler.task.SavableTask
 import net.casual.arcade.scheduler.task.Task
 import net.casual.arcade.scheduler.task.serialization.TaskSerializationContext
 import net.casual.arcade.utils.error.RichResult
+import net.minecraft.network.chat.Component
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import twists.ui.SwappingBossbar
 import twists.util.twists
 
 class SwappingBossbarTask(
-    minigame: Minigame
-): BossbarTask<SwappingBossbar>(minigame, SwappingBossbar()), SavableTask {
+    minigame: Minigame,
+    val title: Component,
+): BossbarTask<SwappingBossbar>(minigame, SwappingBossbar(title)), SavableTask {
     override val id = Companion.id
 
     override fun serialize(output: ValueOutput, context: TaskSerializationContext) {
@@ -23,10 +25,10 @@ class SwappingBossbarTask(
     }
 
     companion object: MinigameTaskFactory<Minigame> {
-        override val id = twists("swapping_boss_bar_task")
+        override val id = twists("titled_boss_bar_task")
 
         override fun create(input: ValueInput, context: MinigameTaskCreationContext<Minigame>): RichResult<Task> {
-            return RichResult.success(SwappingBossbarTask(context.minigame).readData(input, context))
+            return RichResult.success(SwappingBossbarTask(context.minigame, Component.literal("TOODFIXTHIS")).readData(input, context))
         }
     }
 }

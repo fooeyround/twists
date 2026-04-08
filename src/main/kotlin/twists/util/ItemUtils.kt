@@ -1,15 +1,15 @@
 package twists.util
 
-import net.casual.arcade.utils.Identifier
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 
-object ItemUtil {
+object ItemUtils {
 
     fun registerItem(name: String, item: (Item.Properties) -> Item): Item {
         val itemKey = ResourceKey.create(Registries.ITEM, twists(name))
@@ -27,6 +27,14 @@ object ItemUtil {
                 }
             }
 
+    }
+
+    fun randomItem(random: RandomSource): Item? {
+        return try {
+            BuiltInRegistries.ITEM.getRandom(random).get().value().asItem()
+        } catch (_: Exception) {
+            null
+        }
     }
 
 }
