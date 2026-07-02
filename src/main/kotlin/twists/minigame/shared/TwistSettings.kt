@@ -46,7 +46,7 @@ open class TwistSettings(
 
     var randomItemOnInterval by this.register(time {
         name = "random_items_on_interval"
-        display = Items.RED_CANDLE.named("Random Items On Interval")
+        display = Items.DYED_CANDLE.red().named("Random Items On Interval")
         value = 0.Ticks
         option("disabled", Items.BARRIER.named("Disabled"), 0.Ticks)
         for (i in intArrayOf(10, 30, 45)) {

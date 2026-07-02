@@ -28,7 +28,8 @@ import net.casual.arcade.utils.coroutine.launch
 import net.casual.arcade.utils.entity.teleportTo
 import net.casual.arcade.utils.file.ReadableArchive
 import net.casual.arcade.utils.level.resetToDefault
-import net.casual.arcade.utils.toKey
+import net.casual.arcade.utils.registries.toKey
+//import net.casual.arcade.utils.toKey
 import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.Identifier

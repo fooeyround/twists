@@ -17,6 +17,7 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.world.item.enchantment.Enchantment
 import twists.command.TwistsCommand
 import twists.extension.PlayerFallWithoutDamageExtension
+import twists.extension.PlayerMaxHealthExtension
 import twists.extension.SharedInventoryTeamExtension
 import twists.item.TrackingCompassItem
 import twists.minigame.shared.TwistsMinigameManager
@@ -25,6 +26,7 @@ import twists.minigame.lobby.LobbyData
 import twists.minigame.manhunt.ManhuntMinigameFactory
 import twists.minigame.manhunt.TeamCommandModifier
 import twists.minigame.collective_survival.CollectiveSurvivalMinigameFactory
+import twists.minigame.fatal_charity.FatalCharityMinigameFactory
 import twists.minigame.manhunt.TrackCommand
 import twists.minigame.worldless.WorldlessMinigameFactory
 import twists.stats.TwistsStats
@@ -56,12 +58,14 @@ object Twists: DedicatedServerModInitializer {
         LobbyData.register(MinigameRegistries.MINIGAME_DATA_MODULE_PROVIDER)
 
         PlayerFallWithoutDamageExtension.registerEvents()
+        PlayerMaxHealthExtension.registerEvents()
         SharedInventoryTeamExtension.registerEvents()
 
         WorldlessMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
         ManhuntMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
         DeathSwapMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
         CollectiveSurvivalMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
+        FatalCharityMinigameFactory.register(MinigameRegistries.MINIGAME_FACTORY)
         Registry.register(TaskRegistries.TASK_FACTORY, TitledBossbarTask.id, TitledBossbarTask)
 
 

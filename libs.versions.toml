@@ -1,13 +1,13 @@
 [versions]
-minecraft       = "26.1.1"
-fabric-loader   = "0.18.5"
-fabric-api      = "0.144.3+26.1"
-fabric-kotlin   = "1.13.10+kotlin.2.3.20"
-arcade          = "0.9.0-beta.23+26.1.1"
-polymer         = "0.16.1+26.1.1"
+minecraft       = "26.2"
+fabric-loader   = "0.19.3"
+fabric-api      = "0.153.0+26.2"
+fabric-kotlin   = "1.13.12+kotlin.2.4.0"
+arcade          = "0.10.0-beta.2+26.2"
+polymer         = "0.17.0+26.2"
 
 # Plugins
-loom = "1.15-SNAPSHOT"
+loom = "1.17-SNAPSHOT"
 
 [libraries]
 minecraft       = { module = "com.mojang:minecraft"                        , version.ref = "minecraft" }

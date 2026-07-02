@@ -3,6 +3,7 @@ package twists.minigame.manhunt
 import net.casual.arcade.minigame.settings.display.DisplayableSettingsDefaults
 import twists.minigame.shared.TwistSettings
 import net.casual.arcade.minigame.settings.display.MenuGameSettingBuilder.Companion.bool
+import net.casual.arcade.minigame.settings.display.*
 import net.casual.arcade.utils.ItemUtils.named
 import net.minecraft.world.item.Items
 
@@ -13,7 +14,7 @@ class ManhuntSettings(
 
     var intentionalGameDesign by this.register(bool {
         name = "intentional_game_design"
-        display = Items.RED_BED.named("Intentional Game Design")
+        display = Items.BED.red().named("Intentional Game Design")
         value = true
         defaults.options(this)
     })

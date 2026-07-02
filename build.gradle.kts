@@ -20,7 +20,6 @@ repositories {
     maven("https://jitpack.io")
     maven("https://maven.nucleoid.xyz")
     maven("https://api.modrinth.com/maven")
-    maven("https://maven.andante.dev/releases/")
     mavenCentral()
 }
 
@@ -45,7 +44,6 @@ java {
 
 loom {
     runConfigs.configureEach {
-        ideConfigGenerated(true)
         vmArgs("-Dmixin.debug.export=true -DCOMMAND_STACK_TRACES=true -DMC_DEBUG_ENABLED=true -DMC_DEBUG_COMMAND_STACK_TRACES=true -DMC_DEBUG_VERBOSE_COMMAND_ERRORS=true")
     }
     accessWidenerPath.set(file("src/main/resources/twists.accesswidener"))

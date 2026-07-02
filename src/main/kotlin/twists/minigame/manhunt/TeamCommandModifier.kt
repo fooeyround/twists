@@ -40,13 +40,13 @@ internal object TeamCommandModifier : CommandTree<CommandSourceStack> {
         val runnersTeam = server.scoreboard.addPlayerTeam("runners")
 
         huntersTeam.displayName = Component.literal("Hunters").withStyle(ChatFormatting.RED)
-        huntersTeam.color = ChatFormatting.RED
+//        huntersTeam.color  = ChatFormatting.RED
         huntersTeam.setPlayerPrefix(Component.literal("").withStyle(ChatFormatting.RED))
 
 
 
         runnersTeam.displayName = Component.literal("Runners").withStyle(ChatFormatting.BLUE)
-        runnersTeam.color = ChatFormatting.BLUE
+//        runnersTeam.color = ChatFormatting.BLUE
         runnersTeam.setPlayerPrefix(Component.literal("").withStyle(ChatFormatting.BLUE))
 
         players.filter { !runners.contains(it) }.forEach {

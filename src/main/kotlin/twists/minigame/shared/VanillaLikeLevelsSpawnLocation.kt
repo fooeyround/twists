@@ -20,7 +20,7 @@ class VanillaLikeLevelsSpawnLocation(val level: ServerLevel, val allowedLevels: 
         if (respawnData != null) {
             val serverLevel: ServerLevel? = player.server.getLevel(respawnData.dimension())
             if (allowedLevels != null && allowedLevels.all().any { it == serverLevel }) {
-                return this.level.asLocation(respawnData.globalPos().pos.bottomCenter)
+                return this.level.asLocation(respawnData.globalPos.pos.clampLocationWithin(Vec3.ZERO))
             }
         }
         val y = level.getChunk(0, 0).getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, 0, 0) + 1
